@@ -1,4 +1,4 @@
-package com.example;
+package com.example.config;
 
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
@@ -25,7 +25,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 
     private AnnotationConfigWebApplicationContext getContext() {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.setConfigLocation("");
+        context.setConfigLocation("src/main/java/com/example/config");
         return context;
     }
 }
