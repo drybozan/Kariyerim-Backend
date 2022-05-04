@@ -1,4 +1,4 @@
-package net.javaguides.springmvc.helloworld.config;
+package com.example.config;
 
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

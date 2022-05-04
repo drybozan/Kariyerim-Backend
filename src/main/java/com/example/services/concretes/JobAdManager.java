@@ -1,6 +1,5 @@
 package com.example.services.concretes;
 
-import com.example.utilities.results.*;
 import com.example.dataAcces.*;
 import com.example.entities.concretes.JobAd;
 import com.example.entities.dtos.JobAdDto;
@@ -8,11 +7,9 @@ import com.example.entities.dtos.JobAdFilter;
 import com.example.services.abstracts.JobAdService;
 import com.example.utilities.results.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.awt.print.Pageable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -126,8 +123,9 @@ public class JobAdManager implements JobAdService {
 
     //@Override
     public DataResult<List<JobAd>> getByIsActiveAndPageNumberAndFilter(int pageNo, int pageSize, JobAdFilter jobAdFilter) {
-        Pageable pageable = PageRequest.of(pageNo -1, pageSize);
-        return new SuccessDataResult<List<JobAd>>(this.jobAdDao.getByFilter(jobAdFilter, pageable).getContent(), this.jobAdDao.getByFilter(jobAdFilter,pageable).getTotalElements()+"");
+        //Pageable pageable = PageRequest.of(pageNo -1, pageSize);
+        //return new SuccessDataResult<List<JobAd>>(this.jobAdDao.getByFilter(jobAdFilter, pageable).getContent(), this.jobAdDao.getByFilter(jobAdFilter,pageable).getTotalElements()+"");
+        return null;
     }
 
 

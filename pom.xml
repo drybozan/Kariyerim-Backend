@@ -261,6 +261,16 @@
       <artifactId>javax.mail</artifactId>
       <version>1.6.0</version>
     </dependency>
+      <dependency>
+          <groupId>com.fasterxml.jackson</groupId>
+          <artifactId>jackson-base</artifactId>
+          <version>2.9.7</version>
+      </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.13.2</version>
+    </dependency>
 
     <!-- **********************************************************************
             ** 				TESTING DEPENDENCIES 							 	**

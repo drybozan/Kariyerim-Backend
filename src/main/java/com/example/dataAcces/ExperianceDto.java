@@ -1,10 +1,9 @@
 package com.example.dataAcces;
 
-import java.util.List;
-
+import com.example.entities.concretes.Experiance;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.Bozan.db.entities.concretes.Experiance;
+import java.util.List;
 
 
 public interface ExperianceDto extends JpaRepository<Experiance,Integer> {

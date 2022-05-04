@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.Bozan.db.entities.concretes.JobAd;
-import com.Bozan.db.entities.dtos.JobAdFilter;
+import com.example.entities.concretes.JobAd;
+import com.example.entities.dtos.JobAdFilter;
 
 
 
