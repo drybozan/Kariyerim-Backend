@@ -1,8 +1,10 @@
 package com.example.controllers;
 
-import com.example.utilities.results.DataResult;
 import com.example.entities.concretes.WorkPlace;
-import com.example.services.abstracts.WorkPlaceService;
+import com.example.services.concretes.WorkPlaceService;
+import com.example.utilities.results.DataResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +23,8 @@ public class WorkPlacesController {
 
     private WorkPlaceService workPlaceService;
 
+    private static Logger logger = LoggerFactory.getLogger(WorkPlacesController.class);
+
     @Autowired
     public WorkPlacesController(WorkPlaceService workPlaceService) {
         this.workPlaceService = workPlaceService;
@@ -28,6 +32,7 @@ public class WorkPlacesController {
 
     @GetMapping("/getAll")
     public DataResult<List<WorkPlace>> getAll(){
+        logger.info("WorkPlacesController class'ı getAll() metodu çalıştı");
         return this.workPlaceService.getAll();
     }
 }

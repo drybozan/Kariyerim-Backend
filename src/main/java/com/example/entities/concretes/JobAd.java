@@ -46,8 +46,6 @@ public class JobAd {
     @Column(name = "last_date")
     private LocalDate lastDate;
 
-    /*@Column(name = "active")
-    private boolean active;*/
 
     @Column(name = "create_date")
     private LocalDate createDate;

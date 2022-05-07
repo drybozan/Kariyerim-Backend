@@ -1,9 +1,80 @@
 package com.example.dataAcces;
 
+
 import com.example.entities.concretes.JobPosition;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.io.Serializable;
+import java.util.List;
+
+public class JobPositionDao  {
+    @Autowired
+    private SessionFactory sessionFactory ;
+
+    private Session getCurrentSession(){
+
+        return sessionFactory.getCurrentSession();
+    }
+
+    public boolean save(JobPosition jobPosition) {
+        boolean success = true;
+        try {
+            Serializable s = getCurrentSession().save(jobPosition);
+        } catch (Exception e) {
+            e.printStackTrace();
+            success = false;
+        }
+        return success;
+    }
 
 
-public interface JobPositionDao extends JpaRepository<JobPosition,Integer> {
-    JobPosition findByName(String name);
+    public JobPosition getAll(){
+        Session currentSession = getCurrentSession();
+        CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+        CriteriaQuery<JobPosition> criteriaQuery = criteriaBuilder.createQuery(JobPosition.class);
+        Root<JobPosition> root = criteriaQuery.from(JobPosition.class);
+
+        criteriaQuery.select(root);
+
+        Query<JobPosition> dbQuery = currentSession.createQuery(criteriaQuery);
+
+        List<JobPosition> resultList = dbQuery.getResultList();
+        return (JobPosition) resultList;
+    }
+
+    public JobPosition findByName(String name){
+        Session currentSession = getCurrentSession();
+        CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+        CriteriaQuery<JobPosition> criteriaQuery = criteriaBuilder.createQuery(JobPosition.class);
+        Root<JobPosition> root = criteriaQuery.from(JobPosition.class);
+
+        Predicate namePredicate = criteriaBuilder.equal(root.get("name"), "name");
+
+        criteriaQuery.select(root).where(namePredicate);
+
+        Query<JobPosition> query = currentSession.createQuery(criteriaQuery);
+        JobPosition jobPosition = query.getSingleResult();
+        return jobPosition;
+    }
+
+    public JobPosition getById(int jobPositionId){
+        Session currentSession = getCurrentSession();
+        CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+        CriteriaQuery<JobPosition> criteriaQuery = criteriaBuilder.createQuery(JobPosition.class);
+        Root<JobPosition> root = criteriaQuery.from(JobPosition.class);
+
+        Predicate jobPositionIdPredicate = criteriaBuilder.equal(root.get("id"), "jobPositionId");
+        criteriaQuery.select(root).where(jobPositionIdPredicate);
+
+        Query<JobPosition> query = currentSession.createQuery(criteriaQuery);
+        JobPosition jobPosition = query.getSingleResult();
+        return jobPosition;
+    }
 }

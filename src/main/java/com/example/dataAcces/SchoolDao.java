@@ -1,11 +1,80 @@
 package com.example.dataAcces;
 
+
+import com.example.entities.concretes.Cv;
 import com.example.entities.concretes.School;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.io.Serializable;
 
+public class SchoolDao {
+    @Autowired
+    private SessionFactory sessionFactory ;
 
-public interface SchoolDao extends JpaRepository<School,Integer> {
-    List<School> findByCvId(int id);
+    private Session getCurrentSession(){
+
+        return sessionFactory.getCurrentSession();
+    }
+
+    public boolean save(School school) {
+        boolean success = true;
+        try {
+            Serializable s = getCurrentSession().save(school);
+        } catch (Exception e) {
+            e.printStackTrace();
+            success = false;
+        }
+        return success;
+    }
+
+    public boolean deleteById(int schoolId) {
+        boolean success = true;
+        try {
+            getCurrentSession().remove(schoolId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            success = false;
+        }
+        return success;
+    }
+
+    public School getById(int schoolId){
+        Session currentSession = getCurrentSession();
+        CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+        CriteriaQuery<School> criteriaQuery = criteriaBuilder.createQuery(School.class);
+        Root<School> root = criteriaQuery.from(School.class);
+
+        Predicate schoolIdPredicate = criteriaBuilder.equal(root.get("id"), "schoolId");
+        criteriaQuery.select(root).where(schoolIdPredicate);
+
+        Query<School> query = currentSession.createQuery(criteriaQuery);
+        School school = query.getSingleResult();
+        return school;
+    }
+
+    public School findByCvId(int cvId){
+        Session currentSession = getCurrentSession();
+        CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+        CriteriaQuery<School> criteriaQuery = criteriaBuilder.createQuery(School.class);
+        Root<School> schoolRoot = criteriaQuery.from(School.class);
+        Root<Cv> cvRoot = criteriaQuery.from(Cv.class);
+
+        schoolRoot.get("cv").alias("cv");
+
+        Predicate findByCvIdPredicate = criteriaBuilder.equal(schoolRoot.get("cv.id"), cvRoot.get("cvId"));
+        criteriaQuery.select(schoolRoot).where(findByCvIdPredicate);
+        criteriaQuery.distinct(true);
+
+        Query<School> query = currentSession.createQuery(criteriaQuery);
+        School school = query.getSingleResult();
+        return school;
+    }
+
 }

@@ -1,8 +1,10 @@
 package com.example.controllers;
 
-import com.example.utilities.results.DataResult;
 import com.example.entities.concretes.WorkTime;
-import com.example.services.abstracts.WorkTimeService;
+import com.example.services.concretes.WorkTimeService;
+import com.example.utilities.results.DataResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +23,8 @@ public class WorkTimesController {
 
     private WorkTimeService workTimeService;
 
+    private static Logger logger = LoggerFactory.getLogger(WorkTimesController.class);
+
     @Autowired
     public WorkTimesController(WorkTimeService workTimeService) {
         this.workTimeService = workTimeService;
@@ -28,6 +32,7 @@ public class WorkTimesController {
 
     @GetMapping("/getAll")
     public DataResult<List<WorkTime>> getAll(){
+        logger.info("WorkPlacesController class'ı getAll() metodu çalıştı");
         return this.workTimeService.getAll();
     }
 }

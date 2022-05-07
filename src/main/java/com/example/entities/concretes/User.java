@@ -1,19 +1,12 @@
 package com.example.entities.concretes;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+
+
 
 @Entity
 @Table(name = "users")
@@ -31,7 +24,7 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @JsonIgnore
+
     @Column(name = "password")
     private String password;
 
