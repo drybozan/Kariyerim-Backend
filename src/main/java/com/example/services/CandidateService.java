@@ -1,4 +1,4 @@
-package com.example.services.concretes;
+package com.example.services;
 
 
 import com.example.dataAcces.CandidateDao;
@@ -57,13 +57,8 @@ public class CandidateService {
             return new ErrorResult("Şifre 4 karakterden uzun olmalıdır");
         }else if(!isEmailValid(candidate.getEmail())){
             return new ErrorResult("Email geçerli formatta değil");
-        }else if(getByNationalNumber(candidate.getNationalNumber()).getData() != null){
-            return new ErrorResult("Bu kimlik numarası zaten kayıtlı");
-        }else if(userService.getByEmail(candidate.getEmail()).getData() != null){
-            return new ErrorResult("Bu email zaten kayıtlı");
         }else{
             this.candidateDao.save(candidate);
-
             return new SuccessResult("Kullanıcı kaydedildi");
         }
 

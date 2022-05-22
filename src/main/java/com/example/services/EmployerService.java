@@ -1,10 +1,12 @@
-package com.example.services.concretes;
+package com.example.services;
 
 import com.example.dataAcces.EmployerDao;
 import com.example.entities.concretes.Employer;
 import com.example.entities.dtos.EmployerForRegisterDto;
 import com.example.utilities.results.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -13,6 +15,7 @@ import java.util.regex.Pattern;
 
 
 @Service
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Exception.class)
 public class EmployerService  {
 
 
@@ -51,13 +54,11 @@ public class EmployerService  {
         
 
 
-       if(userService.getByEmail(employer.getEmail()).getData() != null){
-            return new ErrorResult("Bu email zaten kayıtlı");
-       }else if(!isEmailValid(employer.getEmail())){
+       if(!isEmailValid(employer.getEmail())){
            return new ErrorResult("Geçerli bir email giriniz");
        }else if(!employer.getEmail().endsWith(employer.getWebSite())){
            return new ErrorResult("Web siteniz ve emailinizin domaini aynı olmalıdır");
-       }else if(employer.getPassword().length() <=4 ){
+       }else if(employer.getPassword().length() < 4 ){
            return new ErrorResult("Şifre 4 karakterden uzun olmalıdır.");
        }else if(employer.getPhoneNumber().length() <10){
            return new ErrorResult("Geçerli bir telefon numarası giriniz.");

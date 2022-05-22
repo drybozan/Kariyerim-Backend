@@ -16,7 +16,7 @@ import javax.servlet.ServletRegistration;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = {"com.example."})
+@ComponentScan(basePackages = {"com.example"})
 public class ApplicationInitializer implements WebApplicationInitializer {
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
@@ -24,13 +24,13 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         servletContext.addListener(new ContextLoaderListener((WebApplicationContext) context));
         Registration.Dynamic dispatcherServlet = servletContext.addServlet("DispatcherServlet",new DispatcherServlet(context));
         ((ServletRegistration.Dynamic) dispatcherServlet).setLoadOnStartup(1);
-        ((ServletRegistration.Dynamic) dispatcherServlet).addMapping("/");
+        ((ServletRegistration.Dynamic) dispatcherServlet).addMapping("/*");
         
     }
 
     private AnnotationConfigWebApplicationContext getContext() {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.setConfigLocation("src.main.java.com.example.config");
+        context.setConfigLocation("com.example");
         return context;
     }
 }

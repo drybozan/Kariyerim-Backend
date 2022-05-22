@@ -1,15 +1,17 @@
-package com.example.services.concretes;
+package com.example.services;
 
 import com.example.utilities.results.*;
 import com.example.dataAcces.JobPositionDao;
 import com.example.entities.concretes.JobPosition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 
-
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Exception.class)
 @Service
 public class  JobPositionService {
 

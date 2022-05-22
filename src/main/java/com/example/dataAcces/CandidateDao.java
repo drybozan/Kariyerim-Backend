@@ -29,29 +29,22 @@ public class CandidateDao  {
         CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
         CriteriaQuery<Candidate> criteriaQuery = criteriaBuilder.createQuery(Candidate.class);
         Root<Candidate> root = criteriaQuery.from(Candidate.class);
-
-        Predicate nationalNumberPredicate = criteriaBuilder.equal(root.get("nationalNumber"), "nationalNumber");
-
+        Predicate nationalNumberPredicate = criteriaBuilder.equal(root.get("nationalNumber"), nationalNumber);
         criteriaQuery.select(root).where(nationalNumberPredicate);
-
-
         Query<Candidate> query = currentSession.createQuery(criteriaQuery);
         Candidate candidate = query.getSingleResult();
         return candidate;
     }
 
-    public Candidate getAll(){
+    public List<Candidate> getAll(){
             Session currentSession = getCurrentSession();
             CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
             CriteriaQuery<Candidate> criteriaQuery = criteriaBuilder.createQuery(Candidate.class);
             Root<Candidate> root = criteriaQuery.from(Candidate.class);
-
             criteriaQuery.select(root);
-
             Query<Candidate> dbQuery = currentSession.createQuery(criteriaQuery);
-
             List<Candidate> resultList = dbQuery.getResultList();
-            return (Candidate) resultList;
+            return resultList;
     }
 
     public boolean save(Candidate candidate) {
@@ -67,7 +60,9 @@ public class CandidateDao  {
     }
 
     public Candidate getById(int candidateId){
-        Session currentSession = getCurrentSession();
+       try{
+           Session currentSession = getCurrentSession();
+
         CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
         CriteriaQuery<Candidate> criteriaQuery = criteriaBuilder.createQuery(Candidate.class);
         Root<Candidate> root = criteriaQuery.from(Candidate.class);
@@ -77,7 +72,12 @@ public class CandidateDao  {
 
         Query<Candidate> query = currentSession.createQuery(criteriaQuery);
         Candidate candidate = query.getSingleResult();
-        return candidate;
+           return candidate;
+       }
+       catch (Exception e ){
+           return null;
+       }
+
     }
 
 }

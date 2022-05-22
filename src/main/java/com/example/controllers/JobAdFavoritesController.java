@@ -1,7 +1,8 @@
 package com.example.controllers;
 
+import com.example.Util;
 import com.example.entities.concretes.JobAdFavorites;
-import com.example.services.concretes.JobAdFavoritesService;
+import com.example.services.JobAdFavoritesService;
 import com.example.utilities.results.DataResult;
 import com.example.utilities.results.Result;
 import org.slf4j.Logger;
@@ -26,32 +27,32 @@ public class JobAdFavoritesController {
     }
 
     @GetMapping("/getByCandidateId")
-    public ResponseEntity<?> getByCandidateId(@RequestParam int candidateId){
+    public String getByCandidateId(@RequestParam int candidateId){
         logger.info("JobAdFavoritesController class'ı getByCandidateId() metodu çalıştı");
         DataResult<List<JobAdFavorites>> result=this.jobAdFavoritesService.getByCandidateId(candidateId);
         if(result.isSuccess()){
-            return ResponseEntity.ok(result);
+            return Util.ConvertToJsonString(ResponseEntity.ok(result));
         }
-        return ResponseEntity.badRequest().body(result);
+        return Util.ConvertToJsonString(ResponseEntity.badRequest().body(result));
     }
 
     @PostMapping("/addFavorite")
-    public ResponseEntity<?> addFavorite(@RequestParam int candidateId,@RequestParam int jobAdId){
+    public String addFavorite(@RequestParam int candidateId,@RequestParam int jobAdId){
         logger.info("JobAdFavoritesController class'ı addFavorite() metodu çalıştı");
         Result result=this.jobAdFavoritesService.addFavorite(candidateId,jobAdId);
         if(result.isSuccess()){
-            return ResponseEntity.ok(result);
+            return Util.ConvertToJsonString(ResponseEntity.ok(result));
         }
-        return ResponseEntity.badRequest().body(result);
+        return Util.ConvertToJsonString(ResponseEntity.badRequest().body(result));
     }
 
     @DeleteMapping("/removeFavorite")
-    public ResponseEntity<?> removeFavorite(@RequestParam int favoriteId){
+    public String removeFavorite(@RequestParam int favoriteId){
         logger.info("JobAdFavoritesController class'ı removeFavorite() metodu çalıştı");
         Result result = this.jobAdFavoritesService.removeFavorite(favoriteId);
         if(result.isSuccess()){
-            return ResponseEntity.ok(result);
+            return Util.ConvertToJsonString(ResponseEntity.ok(result));
         }
-        return ResponseEntity.badRequest().body(result);
+        return Util.ConvertToJsonString(ResponseEntity.badRequest().body(result));//
     }
 }

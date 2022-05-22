@@ -1,19 +1,19 @@
 package com.example.dataAcces;
 
 
-import com.example.entities.concretes.Cv;
 import com.example.entities.concretes.School;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
-
+@Repository
 public class SchoolDao {
     @Autowired
     private SessionFactory sessionFactory ;
@@ -46,17 +46,22 @@ public class SchoolDao {
     }
 
     public School getById(int schoolId){
-        Session currentSession = getCurrentSession();
-        CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
-        CriteriaQuery<School> criteriaQuery = criteriaBuilder.createQuery(School.class);
-        Root<School> root = criteriaQuery.from(School.class);
+        try {
+            Session currentSession = getCurrentSession();
+                    CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+                    CriteriaQuery<School> criteriaQuery = criteriaBuilder.createQuery(School.class);
+                    Root<School> root = criteriaQuery.from(School.class);
 
-        Predicate schoolIdPredicate = criteriaBuilder.equal(root.get("id"), "schoolId");
-        criteriaQuery.select(root).where(schoolIdPredicate);
+                    Predicate schoolIdPredicate = criteriaBuilder.equal(root.get("id"), schoolId);
+                    criteriaQuery.select(root).where(schoolIdPredicate);
 
-        Query<School> query = currentSession.createQuery(criteriaQuery);
-        School school = query.getSingleResult();
-        return school;
+                    Query<School> query = currentSession.createQuery(criteriaQuery);
+                    School school = query.getSingleResult();
+                    return school;
+        }catch (Exception e){
+            return null;
+        }
+
     }
 
     public School findByCvId(int cvId){

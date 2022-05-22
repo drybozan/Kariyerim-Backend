@@ -245,7 +245,6 @@
       <artifactId>postgresql</artifactId>
       <version>42.3.2</version>
     </dependency>
-
     <!-- **********************************************************************
     ** 				MAIL DEPENDENCIES 							 	**
     ********************************************************************** -->
@@ -268,11 +267,16 @@
       <artifactId>javax.mail</artifactId>
       <version>1.6.0</version>
     </dependency>
+      <dependency>
+          <groupId>org.json</groupId>
+          <artifactId>json</artifactId>
+          <version>20220320</version>
+      </dependency>
 
 
-    <!-- **********************************************************************
-            ** 				TESTING DEPENDENCIES 							 	**
-            ********************************************************************** -->
+      <!-- **********************************************************************
+              ** 				TESTING DEPENDENCIES 							 	**
+              ********************************************************************** -->
 
     <!-- <dependency>
       <groupId>junit</groupId>

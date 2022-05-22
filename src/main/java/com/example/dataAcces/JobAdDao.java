@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -13,7 +14,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.util.List;
-
+@Repository
 public class JobAdDao {
     @Autowired
     private SessionFactory sessionFactory ;
@@ -34,7 +35,7 @@ public class JobAdDao {
         return success;
     }
 
-    public JobAd getAll(){
+    public List<JobAd>  getAll(){
         Session currentSession = getCurrentSession();
         CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
         CriteriaQuery<JobAd> criteriaQuery = criteriaBuilder.createQuery(JobAd.class);
@@ -45,22 +46,26 @@ public class JobAdDao {
         Query<JobAd> dbQuery = currentSession.createQuery(criteriaQuery);
 
         List<JobAd> resultList = dbQuery.getResultList();
-        return (JobAd) resultList;
+        return resultList;
     }
 
 
     public JobAd getById(int jobAdId){
-        Session currentSession = getCurrentSession();
-        CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
-        CriteriaQuery<JobAd> criteriaQuery = criteriaBuilder.createQuery(JobAd.class);
-        Root<JobAd> root = criteriaQuery.from(JobAd.class);
+        try {
+           Session currentSession = getCurrentSession();
+                   CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+                   CriteriaQuery<JobAd> criteriaQuery = criteriaBuilder.createQuery(JobAd.class);
+                   Root<JobAd> root = criteriaQuery.from(JobAd.class);
 
-        Predicate jobAdIdPredicate = criteriaBuilder.equal(root.get("id"), "jobAdId");
-        criteriaQuery.select(root).where(jobAdIdPredicate);
+                   Predicate jobAdIdPredicate = criteriaBuilder.equal(root.get("id"), jobAdId);
+                   criteriaQuery.select(root).where(jobAdIdPredicate);
 
-        Query<JobAd> query = currentSession.createQuery(criteriaQuery);
-        JobAd jobAd = query.getSingleResult();
-        return jobAd;
+                   Query<JobAd> query = currentSession.createQuery(criteriaQuery);
+                   JobAd jobAd = query.getSingleResult();
+                   return jobAd;
+        }catch (Exception e){
+            return null;
+        }
     }
 
 

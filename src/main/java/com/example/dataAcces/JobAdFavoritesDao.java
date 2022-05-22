@@ -1,19 +1,18 @@
 package com.example.dataAcces;
 
-import com.example.entities.concretes.Candidate;
-import com.example.entities.concretes.JobAd;
 import com.example.entities.concretes.JobAdFavorites;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
-
+@Repository
 public class JobAdFavoritesDao{
     @Autowired
     private SessionFactory sessionFactory ;
@@ -63,17 +62,22 @@ public class JobAdFavoritesDao{
     }
 
     public JobAdFavorites getById(int jobAdFavoritesId){
-        Session currentSession = getCurrentSession();
-        CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
-        CriteriaQuery<JobAdFavorites> criteriaQuery = criteriaBuilder.createQuery(JobAdFavorites.class);
-        Root<JobAdFavorites> root = criteriaQuery.from(JobAdFavorites.class);
+        try {
+            Session currentSession = getCurrentSession();
+                    CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+                    CriteriaQuery<JobAdFavorites> criteriaQuery = criteriaBuilder.createQuery(JobAdFavorites.class);
+                    Root<JobAdFavorites> root = criteriaQuery.from(JobAdFavorites.class);
 
-        Predicate cvIdPredicate = criteriaBuilder.equal(root.get("id"), "jobAdFavoritesId");
-        criteriaQuery.select(root).where(cvIdPredicate);
+                    Predicate cvIdPredicate = criteriaBuilder.equal(root.get("id"), jobAdFavoritesId);
+                    criteriaQuery.select(root).where(cvIdPredicate);
 
-        Query<JobAdFavorites> query = currentSession.createQuery(criteriaQuery);
-        JobAdFavorites jobAdFavorites = query.getSingleResult();
-        return jobAdFavorites;
+                    Query<JobAdFavorites> query = currentSession.createQuery(criteriaQuery);
+                    JobAdFavorites jobAdFavorites = query.getSingleResult();
+                    return jobAdFavorites;
+        }catch (Exception e){
+            return null;
+        }
+
     }
 
     public boolean existsByCandidate_IdAndJobAd_Id(int candidateId, int jobAdId){

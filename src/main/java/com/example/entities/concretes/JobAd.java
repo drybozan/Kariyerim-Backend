@@ -46,7 +46,6 @@ public class JobAd {
     @Column(name = "last_date")
     private LocalDate lastDate;
 
-
     @Column(name = "create_date")
     private LocalDate createDate;
 
@@ -58,6 +57,6 @@ public class JobAd {
     @JoinColumn(name = "work_time_id")
     private WorkTime workTime;
 
-
+   // private boolean confirmed;
 }
 

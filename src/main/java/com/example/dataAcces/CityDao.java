@@ -4,34 +4,43 @@ import com.example.entities.concretes.City;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
-
+@Repository
 public class CityDao {
     @Autowired
     private SessionFactory sessionFactory ;
-
+    private static Logger logger = LoggerFactory.getLogger(CityDao.class);
     private Session getCurrentSession(){
-
         return sessionFactory.getCurrentSession();
     }
-    public City getAll(){
+    public List<City> getAll(){
+        logger.warn("---Here 0");
         Session currentSession = getCurrentSession();
+        logger.warn("---Here 1");
         CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+        logger.warn("---Here 2");
+
         CriteriaQuery<City> criteriaQuery = criteriaBuilder.createQuery(City.class);
+        logger.warn("---Here 3");
+
         Root<City> root = criteriaQuery.from(City.class);
+        logger.warn("----Here 4");
 
         criteriaQuery.select(root);
 
         Query<City> dbQuery = currentSession.createQuery(criteriaQuery);
 
         List<City> resultList = dbQuery.getResultList();
-        return (City) resultList;
+        return resultList;
     }
 
     public City getById(int cityId){

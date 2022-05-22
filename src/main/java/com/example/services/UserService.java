@@ -1,22 +1,24 @@
-package com.example.services.concretes;
+package com.example.services;
 
-import com.example.utilities.results.DataResult;
-import com.example.utilities.results.ErrorDataResult;
-import com.example.utilities.results.SuccessDataResult;
 import com.example.dataAcces.CandidateDao;
 import com.example.dataAcces.EmployerDao;
 import com.example.dataAcces.UserDao;
 import com.example.entities.concretes.User;
 import com.example.entities.dtos.UserLoginDto;
 import com.example.entities.dtos.UserLoginReturnDto;
+import com.example.utilities.results.DataResult;
+import com.example.utilities.results.ErrorDataResult;
+import com.example.utilities.results.SuccessDataResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 
 
-
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Exception.class)
 @Service
 public class  UserService {
 
@@ -45,6 +47,7 @@ public class  UserService {
 
     //@Override
     public DataResult<UserLoginReturnDto> login(UserLoginDto userLoginDto) {
+
         User user = this.userDao.findByEmail(userLoginDto.getEmail());
         if(user==null){
             return new ErrorDataResult<UserLoginReturnDto>("Hatalı email girdiniz");
@@ -55,15 +58,21 @@ public class  UserService {
         userLoginReturnDto.setId(user.getId());
         userLoginReturnDto.setEmail(user.getEmail());
 
-        if(this.employerDao.getById(user.getId()) != null){
+
+        if(this.candidateDao.getById(user.getId()) != null){
+            userLoginReturnDto.setUserType(1);
+            userLoginReturnDto.setName(this.candidateDao.getById(user.getId()).getFirstName()+" "+this.candidateDao.getById(user.getId()).getLastName());
+        }else if(this.employerDao.getById(user.getId())!= null){
             userLoginReturnDto.setUserType(2);
             userLoginReturnDto.setName(this.employerDao.getById(user.getId()).getCompanyName());
-       
+
         }else {
             return new ErrorDataResult<UserLoginReturnDto>("Bir hata oluştu");
         }
 
         return new SuccessDataResult<UserLoginReturnDto>(userLoginReturnDto,"Giriş yapıldı");
+
+
     }
 
    

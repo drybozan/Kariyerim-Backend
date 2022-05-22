@@ -1,4 +1,4 @@
-package com.example.services.concretes;
+package com.example.services;
 
 import com.example.dataAcces.CvDao;
 import com.example.dataAcces.ExperianceDao;
@@ -7,10 +7,12 @@ import com.example.entities.dtos.ExperianceForSetDto;
 import com.example.utilities.results.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Exception.class)
 @Service
 public class  ExperianceService {
 

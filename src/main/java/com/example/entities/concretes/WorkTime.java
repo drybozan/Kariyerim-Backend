@@ -23,6 +23,6 @@ public class WorkTime {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "workTime")
+    @OneToMany(mappedBy = "workTime", fetch = FetchType.EAGER)
     private List<JobAd> jobAds;
 }

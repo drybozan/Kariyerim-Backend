@@ -1,17 +1,18 @@
 package com.example.controllers;
 
-import com.example.entities.concretes.User;
+import com.example.Util;
 import com.example.entities.dtos.UserLoginDto;
-import com.example.entities.dtos.UserLoginReturnDto;
-import com.example.services.concretes.UserService;
-import com.example.utilities.results.DataResult;
+import com.example.services.UserService;
+import com.example.utilities.results.Result;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 
@@ -36,15 +37,23 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    ResponseEntity<?> login(@RequestBody UserLoginDto userLoginDto){
-        logger.info("UserController class'ı login() metodu çalıştı");
-        DataResult<UserLoginReturnDto> result = this.userService.login(userLoginDto);
+    public String login(@RequestBody String json, HttpServletRequest request, HttpServletResponse response){
+        JSONObject requestBody = new JSONObject(json);
+
+        UserLoginDto nesne = new UserLoginDto();
+
+        nesne.setEmail(requestBody.getString("email"));
+        nesne.setPassword(requestBody.getString("password"));
+
+        Result result=this.userService.login(nesne);
         if(result.isSuccess()){
-            return ResponseEntity.ok(result);
-        }else {
-            return ResponseEntity.badRequest().body(result);
+            return Util.ConvertToJsonString(ResponseEntity.ok(result));
         }
+        return Util.ConvertToJsonString(ResponseEntity.badRequest().body(result));
     }
+
+
+}
 
     
 }

@@ -30,7 +30,7 @@ public class WebConfig implements WebMvcConfigurer {
         return viewResolver;
     }
 
-    public void addInterceptors(InterceptorRegistry registry){
+   public void addInterceptors(InterceptorRegistry registry){
        registry.addInterceptor(new RequestInterceptor()).addPathPatterns("/*");
     }
 

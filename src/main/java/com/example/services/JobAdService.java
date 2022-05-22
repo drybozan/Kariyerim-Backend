@@ -1,4 +1,4 @@
-package com.example.services.concretes;
+package com.example.services;
 
 import com.example.dataAcces.*;
 import com.example.entities.concretes.JobAd;
@@ -6,11 +6,13 @@ import com.example.entities.dtos.JobAdDto;
 import com.example.utilities.results.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
-
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Exception.class)
 @Service
 public class JobAdService {
 

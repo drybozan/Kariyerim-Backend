@@ -1,19 +1,19 @@
 package com.example.dataAcces;
 
 
-import com.example.entities.concretes.Cv;
 import com.example.entities.concretes.Experiance;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
-
+@Repository
 public class ExperianceDao {
     @Autowired
     private SessionFactory sessionFactory ;
@@ -47,17 +47,22 @@ public class ExperianceDao {
     }
 
     public Experiance getById(int experianceId){
-        Session currentSession = getCurrentSession();
-        CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
-        CriteriaQuery<Experiance> criteriaQuery = criteriaBuilder.createQuery(Experiance.class);
-        Root<Experiance> root = criteriaQuery.from(Experiance.class);
+        try {
+            Session currentSession = getCurrentSession();
+                    CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+                    CriteriaQuery<Experiance> criteriaQuery = criteriaBuilder.createQuery(Experiance.class);
+                    Root<Experiance> root = criteriaQuery.from(Experiance.class);
 
-        Predicate experianceIdPredicate = criteriaBuilder.equal(root.get("id"), "experianceId");
-        criteriaQuery.select(root).where(experianceIdPredicate);
+                    Predicate experianceIdPredicate = criteriaBuilder.equal(root.get("id"), experianceId);
+                    criteriaQuery.select(root).where(experianceIdPredicate);
 
-        Query<Experiance> query = currentSession.createQuery(criteriaQuery);
-        Experiance experiance = query.getSingleResult();
-        return experiance;
+                    Query<Experiance> query = currentSession.createQuery(criteriaQuery);
+                    Experiance experiance = query.getSingleResult();
+                    return experiance;
+        }catch (Exception e){
+            return  null;
+        }
+
     }
 
     public Experiance findByCvId(int cvId){

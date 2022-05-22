@@ -12,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "cities")
-
 public class City {
 
     @Id
@@ -23,7 +22,7 @@ public class City {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "city")
+    @OneToMany(mappedBy = "city", fetch = FetchType.EAGER)
     private List<JobAd> jobAds;
 
 }

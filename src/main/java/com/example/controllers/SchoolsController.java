@@ -1,16 +1,18 @@
 package com.example.controllers;
 
-import com.example.entities.concretes.School;
+import com.example.Util;
 import com.example.entities.dtos.SchoolForSerDto;
-import com.example.services.concretes.SchoolService;
-import com.example.utilities.results.DataResult;
+import com.example.services.SchoolService;
 import com.example.utilities.results.Result;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 

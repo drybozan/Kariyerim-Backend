@@ -1,4 +1,4 @@
-package com.example.services.concretes;
+package com.example.services;
 
 import com.example.dataAcces.CandidateDao;
 import com.example.dataAcces.CvDao;
@@ -6,6 +6,8 @@ import com.example.entities.concretes.Cv;
 import com.example.utilities.results.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,6 +15,7 @@ import java.util.List;
 
 
 @Service
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Exception.class)
 public class CvService  {
 
     private CvDao cvDao;
@@ -48,20 +51,17 @@ public class CvService  {
 
 
     public DataResult<Cv> getByCandidateId(int candidateId) {
-        if(this.cvDao.findByCandidateId(candidateId) == null){
+        Cv c = this.cvDao.findByCandidateId(candidateId);
+        if( c== null){
             return new ErrorDataResult<Cv>("Böyle bir candidate yok");
         }
-        return new SuccessDataResult<Cv>(this.cvDao.findByCandidateId(candidateId),"Data listelendi");
+        return new SuccessDataResult<Cv>(c,"Data listelendi");
     }
 
 
     public Result updateGithub(String githublink, int cvId) {
         if(this.cvDao.getByCvId(cvId)==null){
             return new ErrorResult("Böyle bir cv yok");
-        }else if(!githublink.startsWith("https://github.com")){
-            if(!githublink.startsWith("github.com")){
-                return new ErrorResult("Geçerli bir github linki değil");
-            }
         }
         Cv cv=this.cvDao.getByCvId(cvId);
         cv.setGithub(githublink);
@@ -85,11 +85,6 @@ public class CvService  {
     public Result updateLinkedin(String linkedinlink, int cvId) {
         if(this.cvDao.getByCvId(cvId)==null){
             return new ErrorResult("Böyle bir cv yok");
-        }else if(!linkedinlink.startsWith("https://www.linkedin.com") &&
-                !linkedinlink.startsWith("www.linkedin.com") &&
-                !linkedinlink.startsWith("https://linkedin.com") &&
-                !linkedinlink.startsWith("linkedin.com")){
-            return new ErrorResult("Geçerli bir linked in adresi değil");
         }
         Cv cv=this.cvDao.getByCvId(cvId);
         cv.setLinkedin(linkedinlink);

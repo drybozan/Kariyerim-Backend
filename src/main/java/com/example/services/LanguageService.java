@@ -1,17 +1,19 @@
-package com.example.services.concretes;
+package com.example.services;
 
-import com.example.utilities.results.*;
 import com.example.dataAcces.CvDao;
 import com.example.dataAcces.LanguageDao;
 import com.example.entities.concretes.Language;
 import com.example.entities.dtos.LanguageForSetDto;
+import com.example.utilities.results.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 
-
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Exception.class)
 @Service
 public class  LanguageService {
 
@@ -42,6 +44,7 @@ public class  LanguageService {
 
         this.languageDao.save(language);
         return new SuccessResult("Dil kaydedildi");
+
     }
 
     //@Override

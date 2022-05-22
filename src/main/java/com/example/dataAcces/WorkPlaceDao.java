@@ -6,13 +6,14 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
-
+@Repository
 public class WorkPlaceDao {
     @Autowired
     private SessionFactory sessionFactory ;
@@ -22,7 +23,7 @@ public class WorkPlaceDao {
         return sessionFactory.getCurrentSession();
     }
     
-    public WorkPlace getAll(){
+    public List<WorkPlace> getAll(){
         Session currentSession = getCurrentSession();
         CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
         CriteriaQuery<WorkPlace> criteriaQuery = criteriaBuilder.createQuery(WorkPlace.class);
@@ -33,20 +34,25 @@ public class WorkPlaceDao {
         Query<WorkPlace> dbQuery = currentSession.createQuery(criteriaQuery);
 
         List<WorkPlace> resultList = dbQuery.getResultList();
-        return (WorkPlace) resultList;
+        return  resultList;
     }
 
     public WorkPlace getById(int workPlaceId){
-        Session currentSession = getCurrentSession();
-        CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
-        CriteriaQuery<WorkPlace> criteriaQuery = criteriaBuilder.createQuery(WorkPlace.class);
-        Root<WorkPlace> root = criteriaQuery.from(WorkPlace.class);
+        try {
+            Session currentSession = getCurrentSession();
+                    CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+                    CriteriaQuery<WorkPlace> criteriaQuery = criteriaBuilder.createQuery(WorkPlace.class);
+                    Root<WorkPlace> root = criteriaQuery.from(WorkPlace.class);
 
-        Predicate workPlaceIdPredicate = criteriaBuilder.equal(root.get("id"), "workPlaceId");
-        criteriaQuery.select(root).where(workPlaceIdPredicate);
+                    Predicate workPlaceIdPredicate = criteriaBuilder.equal(root.get("id"), workPlaceId);
+                    criteriaQuery.select(root).where(workPlaceIdPredicate);
 
-        Query<WorkPlace> query = currentSession.createQuery(criteriaQuery);
-        WorkPlace workPlace = query.getSingleResult();
-        return workPlace;
+                    Query<WorkPlace> query = currentSession.createQuery(criteriaQuery);
+                    WorkPlace workPlace = query.getSingleResult();
+                    return workPlace;
+        }catch (Exception e){
+            return null;
+        }
+
     }
 }
