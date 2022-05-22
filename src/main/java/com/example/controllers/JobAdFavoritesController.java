@@ -5,8 +5,6 @@ import com.example.entities.concretes.JobAdFavorites;
 import com.example.services.JobAdFavoritesService;
 import com.example.utilities.results.DataResult;
 import com.example.utilities.results.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

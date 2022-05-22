@@ -1,32 +1,42 @@
 package com.example.interceptor;
 
-import org.apache.log4j.Logger;
-import org.springframework.web.method.HandlerMethod;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Method;
 
-public class RequestInterceptor extends HandlerInterceptorAdapter{
+@Component
+public class RequestInterceptor extends HandlerInterceptorAdapter {
 
-    private static final Logger logger = Logger.getLogger(RequestInterceptor.class);
+    private static final Logger logger = LoggerFactory.getLogger(RequestInterceptor.class);
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        HandlerMethod hm = (HandlerMethod) handler;
-        Method method = hm.getMethod();
-        System.out.println(method.getName() + " isimli metodun yurutumunden once");
-        logger.info(method.getName() + " isimli metodun yurutumunden once");
-        return super.preHandle(request, response, handler);
+        long startTime = System.currentTimeMillis();
+        logger.info("eeeeeeeeeeeeeeRequest URL::" + request.getRequestURL().toString()
+                + ":: Start Time=" + System.currentTimeMillis());
+        request.setAttribute("startTime", startTime);
+        return true;
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        HandlerMethod hm = (HandlerMethod) handler;
-        Method method = hm.getMethod();
-        System.out.println(method.getName() + " isimli metodun yurutumunden sonra");
-        logger.info(method.getName() + " isimli metodun yurutumunden sonra");
-        super.postHandle(request, response, handler, modelAndView);
+    public void postHandle(HttpServletRequest request,
+                           HttpServletResponse response, Object handler,
+                           ModelAndView modelAndView) throws Exception {
+        System.out.println("Request URL::" + request.getRequestURL().toString() + " Sent to Handler :: Current Time=" + System.currentTimeMillis());
     }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        long startTime = (Long) request.getAttribute("startTime");
+        logger.info("Request URL::" + request.getRequestURL().toString()
+                + ":: End Time=" + System.currentTimeMillis());
+        logger.info("Request URL::" + request.getRequestURL().toString()
+                + ":: Time Taken=" + (System.currentTimeMillis() - startTime));
+    }
+
 }

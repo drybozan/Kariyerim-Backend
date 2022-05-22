@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 @RestController
@@ -26,9 +28,15 @@ public class ExperiancesController {
     }
 
     @PostMapping(value="/add")
-    public String add(@RequestBody ExperianceForSetDto experianceForSetDto){
-        logger.info("ExperiancesController class'ı add() metodu çalıştı");
-        Result result = this.experianceService.add(experianceForSetDto);
+    public String add(@RequestBody String json, HttpServletRequest request, HttpServletResponse response){
+        JSONObject requestBody = JSONObject.fromObject(json);
+        ExperianceForSetDto nesne = new ExperianceForSetDto();
+        nesne.setCvId(requestBody.getInt("cvId"));
+        nesne.setCompanyName(requestBody.getString("companyName"));
+        nesne.setPosition(requestBody.getString("position"));
+        nesne.setEndDate(Util.ConvertToDate(requestBody.getString("endDate")));
+        nesne.setStartDate(Util.ConvertToDate(requestBody.getString("startDate")));
+        Result result = this.experianceService.add(nesne);
         if(result.isSuccess()){
             return Util.ConvertToJsonString(ResponseEntity.ok(result));
         }

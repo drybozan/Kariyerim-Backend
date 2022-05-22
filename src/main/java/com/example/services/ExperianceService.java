@@ -39,7 +39,7 @@ public class  ExperianceService {
         }
 
         Experiance experiance=new Experiance();
-        experiance.setCv(this.cvDao.getByCvId((experianceForSetDto.getCvId())));
+        experiance.setCv_id(this.cvDao.getByCvId((experianceForSetDto.getCvId())).getId());
         experiance.setCompanyName(experianceForSetDto.getCompanyName());
         experiance.setPosition(experianceForSetDto.getPosition());
         experiance.setStartDate(experianceForSetDto.getStartDate());
@@ -51,10 +51,11 @@ public class  ExperianceService {
 
 
     public Result delete(int experianceId) {
-        if(this.experianceDto.getById(experianceId)==null){
+        Experiance ex = this.experianceDto.getById(experianceId);
+        if(ex==null){
             return new ErrorResult("Böyle bir tecrübe yok");
         }
-        this.experianceDto.deleteById(experianceId);
+        this.experianceDto.deleteById(ex);
         return new SuccessResult("Silindi");
     }
 

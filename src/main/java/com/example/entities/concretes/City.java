@@ -22,7 +22,8 @@ public class City {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "city", fetch = FetchType.EAGER)
+
+    @Transient
     private List<JobAd> jobAds;
 
 }

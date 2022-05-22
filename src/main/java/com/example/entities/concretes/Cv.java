@@ -3,8 +3,6 @@ package com.example.entities.concretes;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
@@ -34,21 +32,15 @@ public class Cv {
     @Column(name = "biography")
     private String biography;
 
-
-
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "cv")
+    @Transient
     private List<Experiance> experiances;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "cv")
+    @Transient
     private List<Language> languages;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "cv")
+    @Transient
     private List<School> schools;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "cv")
+    @Transient
     private List<Technology> technologies;
 }

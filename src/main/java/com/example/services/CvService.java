@@ -43,10 +43,11 @@ public class CvService  {
 
 
     public DataResult<Cv> getByCvId(int cvId) {
-        if(this.cvDao.getByCvId(cvId)==null){
+        Cv cv = this.cvDao.getByCvId2(cvId);
+        if(cv ==null){
             return new ErrorDataResult<Cv>("Böyle bir cv yok");
         }
-        return new SuccessDataResult<Cv>(this.cvDao.getByCvId(cvId),"Data listelendi");
+        return new SuccessDataResult<Cv>(cv,"Data listelendi");
     }
 
 
@@ -60,10 +61,10 @@ public class CvService  {
 
 
     public Result updateGithub(String githublink, int cvId) {
-        if(this.cvDao.getByCvId(cvId)==null){
+        Cv cv = this.cvDao.getByCvId(cvId);
+        if(cv==null){
             return new ErrorResult("Böyle bir cv yok");
         }
-        Cv cv=this.cvDao.getByCvId(cvId);
         cv.setGithub(githublink);
         this.cvDao.save(cv);
         return new SuccessResult("Kaydedildi");
@@ -77,16 +78,15 @@ public class CvService  {
         Cv cv=this.cvDao.getByCvId(cvId);
         cv.setGithub(null);
         this.cvDao.save(cv);
-
         return new SuccessResult("Github adresi kaldırıldı");
     }
 
 
     public Result updateLinkedin(String linkedinlink, int cvId) {
-        if(this.cvDao.getByCvId(cvId)==null){
+        Cv cv = this.cvDao.getByCvId(cvId);
+        if(cv==null){
             return new ErrorResult("Böyle bir cv yok");
         }
-        Cv cv=this.cvDao.getByCvId(cvId);
         cv.setLinkedin(linkedinlink);
         this.cvDao.save(cv);
         return new SuccessResult("Kaydedildi");

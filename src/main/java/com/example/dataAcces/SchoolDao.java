@@ -13,6 +13,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
+import java.util.List;
+
 @Repository
 public class SchoolDao {
     @Autowired
@@ -34,10 +36,10 @@ public class SchoolDao {
         return success;
     }
 
-    public boolean deleteById(int schoolId) {
+    public boolean deleteById(School school) {
         boolean success = true;
         try {
-            getCurrentSession().remove(schoolId);
+            getCurrentSession().remove(school);
         } catch (Exception e) {
             e.printStackTrace();
             success = false;
@@ -64,7 +66,7 @@ public class SchoolDao {
 
     }
 
-    public School findByCvId(int cvId){
+    public List<School> findByCvId(int cvId){
         Session currentSession = getCurrentSession();
         CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
         CriteriaQuery<School> criteriaQuery = criteriaBuilder.createQuery(School.class);
@@ -78,7 +80,7 @@ public class SchoolDao {
         criteriaQuery.distinct(true);
 
         Query<School> query = currentSession.createQuery(criteriaQuery);
-        School school = query.getSingleResult();
+        List<School> school = query.getResultList();
         return school;
     }
 

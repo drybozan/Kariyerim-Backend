@@ -22,8 +22,6 @@ public class EmployerService  {
     private EmployerDao employerDao;
     private UserService userService;
 
-
-    //@Autowired
     public EmployerService(EmployerDao employerDao,UserService userService) {
         this.employerDao = employerDao;
         this.userService=userService;

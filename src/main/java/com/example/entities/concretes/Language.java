@@ -24,7 +24,6 @@ public class Language {
     @Column(name = "level")
     private String level;
 
-    @ManyToOne()
-    @JoinColumn(name = "cv_id")
-    private Cv cv;
+    @Column(name = "cv_id")
+    private int cv_id;
 }

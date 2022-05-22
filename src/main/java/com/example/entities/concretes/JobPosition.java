@@ -23,7 +23,6 @@ public class JobPosition {
     @Column(name = "position")
     private String name;
 
-
-    @OneToMany(mappedBy = "jobPosition", fetch = FetchType.EAGER)
+    @Transient
     private List<JobAd> jobAds;
 }

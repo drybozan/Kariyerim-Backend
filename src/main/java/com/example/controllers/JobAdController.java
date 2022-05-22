@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @RequestMapping("/api/jobAd")
 @CrossOrigin
@@ -28,18 +31,17 @@ public class JobAdController {
     }
 
     @GetMapping("/getall")
-    public String getAll(){
-        logger.info("JobAdController Class'ı getAll() metodu çalıştı");
+    public String getAll() {
         return Util.ConvertToJsonString(this.jobAdService.getAll());
     }
 
+
     @GetMapping("/getByJobAdId")
-    public String getByJobAdId(@RequestParam int id){
-        logger.info("JobAdController Class'ı getByJobAdId() metodu çalıştı");
-        JobAd jobAd=new JobAd();
-        JobAd jobAdForSet=this.jobAdService.getByJobAdId(id).getData();
-        if(jobAdForSet==null){
-            return Util.ConvertToJsonString(Util.ConvertToJsonString(new ErrorDataResult<JobAd>("Böyle bir ilan yok")));
+    public String getByJobAdId(@RequestParam int id) {
+        JobAd jobAdForSet = this.jobAdService.getByJobAdId(id).getData();
+        if (jobAdForSet == null) {
+            return Util.ConvertToJsonString(Util.ConvertToJsonString(
+                    new ErrorDataResult<JobAd>("Böyle bir ilan yok")));
         }
         jobAd.setId(jobAdForSet.getId());
         jobAd.setEmployer(jobAdForSet.getEmployer());
@@ -59,18 +61,44 @@ public class JobAdController {
     }
 
     @PostMapping("/create")
-    public String create(@RequestBody JobAdDto jobAdDto){
-        logger.info("JobAdController Class'ı create() metodu çalıştı");
-        Result result=this.jobAdService.create(jobAdDto);
-        if(result.isSuccess()){
+    public String create(@RequestBody String json, HttpServletRequest request, HttpServletResponse response) {
+        JSONObject requestBody = JSONObject.fromObject(json);
+        JobAdDto nesne = new JobAdDto();
+        nesne.setCityId(requestBody.getInt("cityId"));
+        nesne.setJobPositionId(requestBody.getInt("jobPositionId"));
+        nesne.setEmployerId(requestBody.getInt("employerId"));
+        nesne.setWorkPlaceId(requestBody.getInt("workPlaceId"));
+        nesne.setWorkTimeId(requestBody.getInt("workTimeId"));
+        nesne.setDescription(requestBody.getString("description"));
+        nesne.setOpenPositions(requestBody.getInt("openPositions"));
+        nesne.setLastDate(Util.ConvertToDate(requestBody.getString("lastDate")));
+        nesne.setMinSalary(requestBody.getInt("minSalary"));
+        nesne.setMaxSalary(requestBody.getInt("maxSalary"));
+        Result result = this.jobAdService.create(nesne);
+        if (result.isSuccess()) {
             return Util.ConvertToJsonString(ResponseEntity.ok(result));
         }
         return Util.ConvertToJsonString(ResponseEntity.badRequest().body(result));
     }
 
-//    @PostMapping("/getByActiveAndFilter")
-//    public Result getByActiveAndFilter(@RequestParam int pageNo,@RequestParam int pageSize,@RequestBody JobAdFilter jobAdFilter){
-//        return jobAdService.getByIsActiveAndPageNumberAndFilter(pageNo,pageSize,jobAdFilter);
-//    }
-}
+    @PostMapping("/getByActiveAndFilter")
+    public String getByActiveAndFilter(@RequestParam int pageNo, @RequestParam int pageSize,
+                                       @RequestBody String jobAdFilter) {
+            if (jobAdFilter.equals("{}"))
+                return Util.ConvertToJsonString(this.jobAdService.getAll(pageNo, pageSize));
+            JSONObject requestBody = JSONObject.fromObject(jobAdFilter);
+            Integer[] cityId = null, jobPositionId = null, workPlaceId = null, workTimeId = null;
+            try {cityId = Util.JsonArrayToIntArray(requestBody.getJSONArray("cityId"));}
+            catch (JSONException e) { }
+            try { jobPositionId = Util.JsonArrayToIntArray(requestBody.getJSONArray("jobPositionId")); }
+            catch (JSONException e) { }
+            try { workPlaceId = Util.JsonArrayToIntArray(requestBody.getJSONArray("workPlaceId"));}
+            catch(JSONException e){ }
+            try { workTimeId = Util.JsonArrayToIntArray(requestBody.getJSONArray("workTimeId")); }
+            catch (JSONException e) { }
+
+            return Util.ConvertToJsonString(jobAdService.getByFilter(pageNo, pageSize,
+                    cityId, jobPositionId, workPlaceId, workTimeId));
+        }
+    }
 

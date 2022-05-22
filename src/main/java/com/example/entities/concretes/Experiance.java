@@ -32,7 +32,6 @@ public class Experiance {
     @Column(name = "end_date")
     private LocalDate endDate;
 
-    @ManyToOne
-    @JoinColumn(name = "cv_id")
-    private Cv cv;
+    @Column(name = "cv_id")
+    private int cv_id;
 }

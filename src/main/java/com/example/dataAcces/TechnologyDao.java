@@ -12,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
+import java.util.List;
 
 @Repository
 public class TechnologyDao {
@@ -36,7 +37,7 @@ public class TechnologyDao {
     public boolean deleteById(int technologyId) {
         boolean success = true;
         try {
-            getCurrentSession().remove(technologyId);
+            getCurrentSession().remove(technology);
         } catch (Exception e) {
             e.printStackTrace();
             success = false;
@@ -62,7 +63,8 @@ public class TechnologyDao {
         }
 
     }
-    public Technology findByCvId(int cvId){
+
+    public List<Technology> findByCvId(int cvId){
         Session currentSession = getCurrentSession();
         CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
         CriteriaQuery<Technology> criteriaQuery = criteriaBuilder.createQuery(Technology.class);
@@ -76,7 +78,7 @@ public class TechnologyDao {
         criteriaQuery.distinct(true);
 
         Query<Technology> query = currentSession.createQuery(criteriaQuery);
-        Technology technology = query.getSingleResult();
+        List<Technology> technology = query.getResultList();
         return technology;
     }
 }

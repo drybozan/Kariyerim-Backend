@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Exception.class)
@@ -96,17 +95,21 @@ public class JobAdService {
     public DataResult<List<JobAd>> getAll() {
         return new SuccessDataResult<List<JobAd>>((List<JobAd>) this.jobAdDao.getAll(),"Data listelendi");
     }
-
-    public DataResult<JobAd> getByJobAdId(int id) {
-        if(this.jobAdDao.getById(id)==null){
-            return new ErrorDataResult<JobAd>("Böyle bir ilan yok");
-        }
-        return new SuccessDataResult<JobAd>(this.jobAdDao.getById(id),"Data listelendi");
+    public  DataResult<List<JobAd>> getAll(int pageNo, int pageSize){
+        return new SuccessDataResult<List<JobAd>>((List<JobAd>) this.jobAdDao.getAll(pageNo, pageSize),"Data listelendi");
     }
 
-//    public DataResult<List<JobAd>> getByIsActiveAndPageNumberAndFilter(int pageNo, int pageSize, JobAdFilter jobAdFilter) {
-//        Pageable pageable = PageRequest.of(pageNo -1, pageSize);
-//        return new SuccessDataResult<List<JobAd>>(this.jobAdDao.getByFilter(jobAdFilter, pageable).getContent(), this.jobAdDao.getByFilter(jobAdFilter,pageable).getTotalElements()+"");
-//    }
+    public DataResult<JobAd> getByJobAdId(int id) {
+        JobAd jobAd = this.jobAdDao.getById(id);
+        if(jobAd ==null){
+            return new ErrorDataResult<JobAd>("Böyle bir ilan yok");
+        }
+        return new SuccessDataResult<JobAd>(jobAd ,"Data listelendi");
+    }
+
+    public DataResult<List<JobAd>> getByFilter(int pageNo, int pageSize,Integer[] cityId, Integer[]  jobPositionId, Integer[]  workPlaceId, Integer[] workTimeId){
+        List<JobAd> result = this.jobAdDao.getByFilter(pageNo, pageSize, cityId,jobPositionId,workPlaceId,workTimeId);
+        return new DataResult<List<JobAd>>(result, true);
+    }
 }
 

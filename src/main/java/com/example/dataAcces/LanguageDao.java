@@ -35,10 +35,10 @@ public class LanguageDao {
         }
         return success;
     }
-    public boolean deleteById(int languageId) {
+    public boolean deleteById(Language language) {
         boolean success = true;
         try {
-            getCurrentSession().remove(languageId);
+            getCurrentSession().remove(language);
         } catch (Exception e) {
             e.printStackTrace();
             success = false;

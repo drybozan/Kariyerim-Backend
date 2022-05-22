@@ -2,7 +2,9 @@ package com.example.services;
 
 
 import com.example.dataAcces.CandidateDao;
+import com.example.dataAcces.CvDao;
 import com.example.entities.concretes.Candidate;
+import com.example.entities.concretes.Cv;
 import com.example.entities.dtos.CandidateForRegisterDto;
 import com.example.utilities.results.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,8 @@ public class CandidateService {
 
     private CandidateDao candidateDao;
     private UserService userService;
-  
+    @Autowired
+    private CvDao cvd;
     @Autowired
     public CandidateService(CandidateDao candidateDao,UserService userService) {
         this.candidateDao = candidateDao;
@@ -59,6 +62,16 @@ public class CandidateService {
             return new ErrorResult("Email geçerli formatta değil");
         }else{
             this.candidateDao.save(candidate);
+            Cv cv = new Cv();
+            cv.setTechnologies(null);
+            cv.setCandidate(candidate);
+            cv.setExperiances(null);
+            cv.setSchools(null);
+            cv.setLanguages(null);
+            cv.setBiography(null);
+            cv.setGithub(null);
+            cv.setLinkedin(null);
+            cvd.save(cv);
             return new SuccessResult("Kullanıcı kaydedildi");
         }
 

@@ -37,7 +37,7 @@ public class  TechnologyService {
         }
 
         Technology technology=new Technology();
-        technology.setCv(this.cvDao.getByCvId(technologyForSerDto.getCvId()));
+        technology.setCv_id(this.cvDao.getByCvId(technologyForSerDto.getCvId()).getId());
         technology.setName(technologyForSerDto.getName());
 
         this.technologyDao.save(technology);
@@ -45,10 +45,11 @@ public class  TechnologyService {
     }
 
     public Result deleteTechnology(int technologyId) {
-        if(this.technologyDao.getById(technologyId)==null){
+        Technology tec = this.technologyDao.getById(technologyId);
+        if(tec==null){
             return new ErrorResult("Böyle bir teknoloji yok");
         }
-        this.technologyDao.deleteById(technologyId);
+        this.technologyDao.deleteById(tec);
         return new SuccessResult("Silindi");
     }
 

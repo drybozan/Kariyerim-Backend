@@ -13,6 +13,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
+import java.util.List;
+
 @Repository
 public class ExperianceDao {
     @Autowired
@@ -35,10 +37,10 @@ public class ExperianceDao {
         return success;
     }
 
-    public boolean deleteById(int experianceId) {
+    public boolean deleteById(Experiance experiance) {
         boolean success = true;
         try {
-            getCurrentSession().remove(experianceId);
+            getCurrentSession().remove(experiance);
         } catch (Exception e) {
             e.printStackTrace();
             success = false;
@@ -65,7 +67,7 @@ public class ExperianceDao {
 
     }
 
-    public Experiance findByCvId(int cvId){
+    public List<Experiance> findByCvId(int cvId){
         Session currentSession = getCurrentSession();
         CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
         CriteriaQuery<Experiance> criteriaQuery = criteriaBuilder.createQuery(Experiance.class);
@@ -79,7 +81,7 @@ public class ExperianceDao {
         criteriaQuery.distinct(true);
 
         Query<Experiance> query = currentSession.createQuery(criteriaQuery);
-        Experiance experiance = query.getSingleResult();
+        List<Experiance> experiance = query.getResultList();
         return experiance;
     }
 

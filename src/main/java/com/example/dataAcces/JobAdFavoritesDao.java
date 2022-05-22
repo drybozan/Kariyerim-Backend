@@ -12,6 +12,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
+import java.util.List;
+
 @Repository
 public class JobAdFavoritesDao{
     @Autowired
@@ -35,7 +37,8 @@ public class JobAdFavoritesDao{
     public boolean deleteById(int favoriteId) {
         boolean success = true;
         try {
-            getCurrentSession().remove(favoriteId);
+            getCurrentSession().remove(getById(favoriteId));
+
         } catch (Exception e) {
             e.printStackTrace();
             success = false;
@@ -43,7 +46,7 @@ public class JobAdFavoritesDao{
         return success;
     }
 
-    public JobAdFavorites findByCandidateId(int candidateId){
+    public List<JobAdFavorites> findByCandidateId(int candidateId){
         Session currentSession = getCurrentSession();
         CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
         CriteriaQuery<JobAdFavorites> criteriaQuery = criteriaBuilder.createQuery(JobAdFavorites.class);
@@ -57,7 +60,7 @@ public class JobAdFavoritesDao{
         criteriaQuery.distinct(true);
 
         Query<JobAdFavorites> query = currentSession.createQuery(criteriaQuery);
-        JobAdFavorites jobAdFavorites = query.getSingleResult();
+        List<JobAdFavorites> jobAdFavorites = query.getResultList();
         return jobAdFavorites;
     }
 
@@ -81,25 +84,22 @@ public class JobAdFavoritesDao{
     }
 
     public boolean existsByCandidate_IdAndJobAd_Id(int candidateId, int jobAdId){
-        Session currentSession = getCurrentSession();
-        CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
-        CriteriaQuery<JobAdFavorites> criteriaQuery = criteriaBuilder.createQuery(JobAdFavorites.class);
-        Root<JobAdFavorites> jobAdFavoritesRoot = criteriaQuery.from(JobAdFavorites.class);
-        Root<Candidate> candidateRoot = criteriaQuery.from(Candidate.class);
-        Root<JobAd> jobAdRoot = criteriaQuery.from(JobAd.class);
+        try{
+            Session currentSession = getCurrentSession();
+            CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+            CriteriaQuery<JobAdFavorites> criteriaQuery = criteriaBuilder.createQuery(JobAdFavorites.class);
+            Root<JobAdFavorites> jobAdFavoritesRoot = criteriaQuery.from(JobAdFavorites.class);
 
-        jobAdFavoritesRoot.get("candidate").alias("candidate");
-        jobAdRoot.get("jobAd").alias("jobAd");
+            Predicate findByCandidateIdPredicate = criteriaBuilder.equal(jobAdFavoritesRoot.get("candidate").get("id"), candidateId);
+            Predicate findByJobAdPredicate = criteriaBuilder.equal(jobAdFavoritesRoot.get("jobAd").get("id"), jobAdId);
+            criteriaQuery.select(jobAdFavoritesRoot).where(criteriaBuilder.and(findByCandidateIdPredicate,findByJobAdPredicate));
+            criteriaQuery.distinct(true);
 
-        Predicate findByCandidateIdPredicate = criteriaBuilder.equal(jobAdFavoritesRoot.get("candidate.id"), candidateRoot.get("candidateId"));
-        Predicate findByJobAdPredicate = criteriaBuilder.equal(jobAdFavoritesRoot.get("jobAd.id"), jobAdRoot.get("jobAdId"));
-        criteriaQuery.select(jobAdFavoritesRoot).where(criteriaBuilder.and(findByCandidateIdPredicate,findByJobAdPredicate));
-        criteriaQuery.distinct(true);
-
-        Query<JobAdFavorites> query = currentSession.createQuery(criteriaQuery);
-        JobAdFavorites jobAdFavorites = query.getSingleResult();
-        Boolean existIds = jobAdFavorites==null ? true:false;
-        return existIds;
+            Query<JobAdFavorites> query = currentSession.createQuery(criteriaQuery);
+            JobAdFavorites jobAdFavorites = query.getSingleResult();
+            return true;
+        }
+        catch (Exception ex){return false;}
     }
 
     //List<JobAdFavorites> findByCandidateId(int id);

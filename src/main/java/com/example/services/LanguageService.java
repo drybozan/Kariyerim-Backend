@@ -38,10 +38,10 @@ public class  LanguageService {
         }
 
         Language language=new Language();
-        language.setCv(this.cvDao.getByCvId(languageForSetDto.getCvId()));
+        //language.setCv(this.cvDao.getByCvId(languageForSetDto.getCvId()));
         language.setName(languageForSetDto.getName());
         language.setLevel(languageForSetDto.getLevel());
-
+        language.setCv_id(languageForSetDto.getCvId());
         this.languageDao.save(language);
         return new SuccessResult("Dil kaydedildi");
 
@@ -49,10 +49,11 @@ public class  LanguageService {
 
     //@Override
     public Result deleteLanguage(int languageId) {
-        if(this.languageDao.getById(languageId)==null){
+        Language lan = this.languageDao.getById(languageId);
+        if(lan == null){
             return new ErrorResult("Böyle bir dil bulunamadı");
         }
-        this.languageDao.deleteById(languageId);
+        this.languageDao.deleteById(lan);
         return new SuccessResult("Silindi");
     }
 

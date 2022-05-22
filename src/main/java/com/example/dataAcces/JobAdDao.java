@@ -13,6 +13,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 @Repository
 public class JobAdDao {
@@ -48,6 +49,20 @@ public class JobAdDao {
         List<JobAd> resultList = dbQuery.getResultList();
         return resultList;
     }
+    public List<JobAd>  getAll(int pageNo, int pageSize){
+        Session currentSession = getCurrentSession();
+        CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+        CriteriaQuery<JobAd> criteriaQuery = criteriaBuilder.createQuery(JobAd.class);
+        Root<JobAd> root = criteriaQuery.from(JobAd.class);
+
+        criteriaQuery.select(root);
+
+        Query<JobAd> dbQuery = currentSession.createQuery(criteriaQuery);
+        dbQuery.setFirstResult((pageNo-1) * pageSize);
+        dbQuery.setMaxResults(pageSize);
+        List<JobAd> resultList = dbQuery.getResultList();
+        return resultList;
+    }
 
 
     public JobAd getById(int jobAdId){
@@ -68,13 +83,37 @@ public class JobAdDao {
         }
     }
 
+    public List<JobAd> getByFilter(int pageNo, int pageSize, Integer[]  cityId, Integer[]  jobPositionId, Integer[]  workPlaceId, Integer[]  workTimeId){
+            Session currentSession = getCurrentSession();
+            CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+            CriteriaQuery<JobAd> criteriaQuery = criteriaBuilder.createQuery(JobAd.class);
+            Root<JobAd> root = criteriaQuery.from(JobAd.class);
 
-//    @Query("Select j from com.Bozan.db.entities.concretes.JobAd j where ((:#{#filter.cityId}) IS NULL OR j.city.id IN (:#{#filter.cityId}))"
-//           +" and ((:#{#filter.jobPositionId}) IS NULL OR j.jobPosition.id IN (:#{#filter.jobPositionId}))"
-//           +" and ((:#{#filter.workPlaceId}) IS NULL OR j.workPlace.id IN (:#{#filter.workPlaceId}))"
-//            +" and ((:#{#filter.workTimeId}) IS NULL OR j.workTime.id IN (:#{#filter.workTimeId}))"
-//    )
-//    public Page<JobAd> getByFilter(@Param("filter") JobAdFilter jobAdFilter, Pageable pageable);
+            List<Predicate> prediklerim = new ArrayList<>();
+
+            if(cityId != null)
+                prediklerim.add(root.get("city").get("id").in(cityId));
+            if (jobPositionId != null)
+                prediklerim.add(root.get("jobPosition").get("id").in(jobPositionId));
+            if (workPlaceId != null)
+                prediklerim.add(root.get("workPlace").get("id").in(workPlaceId));
+            if(workTimeId !=null)
+                prediklerim.add(root.get("workTime").get("id").in(workTimeId));
+
+            Predicate sonuc = null;
+            for(int i=0; i < prediklerim.size(); i++){
+              sonuc = criteriaBuilder.and(prediklerim.get(i));
+            }
+            if(prediklerim.size() > 0)
+                criteriaQuery.select(root).where(sonuc);
+            else
+                criteriaQuery.select(root);
+            Query<JobAd> query = currentSession.createQuery(criteriaQuery);
+            query.setFirstResult((pageNo-1) * pageSize);
+            query.setMaxResults(pageSize);
+            List<JobAd> list = query.getResultList();
+            return list;
+    }
 }
 
 

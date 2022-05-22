@@ -23,6 +23,15 @@ public class CvDao {
         return sessionFactory.getCurrentSession();
     }
 
+    @Autowired
+    private LanguageDao lanDao;
+    @Autowired
+    private TechnologyDao tecDao;
+    @Autowired
+    private SchoolDao schDao;
+    @Autowired
+    private ExperianceDao expDao;
+
     public boolean save(Cv cv) {
         boolean success = true;
         try {
@@ -48,40 +57,58 @@ public class CvDao {
         return  resultList;
     }
 
-    public Cv getByCvId(int cvId){
+    public Cv getByCvId2(int cvId){
         try {
             Session currentSession = getCurrentSession();
                     CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
                     CriteriaQuery<Cv> criteriaQuery = criteriaBuilder.createQuery(Cv.class);
                     Root<Cv> root = criteriaQuery.from(Cv.class);
 
-                    Predicate cvIdPredicate = criteriaBuilder.equal(root.get("id"), cvId);
-                    criteriaQuery.select(root).where(cvIdPredicate);
+            Predicate cvIdPredicate = criteriaBuilder.equal(root.get("candidate").get("id"), cvId);
+            criteriaQuery.select(root).where(cvIdPredicate);
 
                     Query<Cv> query = currentSession.createQuery(criteriaQuery);
                     Cv cv = query.getSingleResult();
 
                     return cv;
         }catch (Exception e){
-            return  null;
+          return null;
         }
 
     }
+    public Cv getByCvId(int cvId){
+        try {
+            Session currentSession = getCurrentSession();
+            CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+            CriteriaQuery<Cv> criteriaQuery = criteriaBuilder.createQuery(Cv.class);
+            Root<Cv> root = criteriaQuery.from(Cv.class);
+
+            Predicate cvIdPredicate = criteriaBuilder.equal(root.get("id"), cvId);
+            criteriaQuery.select(root).where(cvIdPredicate);
+
+            Query<Cv> query = currentSession.createQuery(criteriaQuery);
+            Cv cv = query.getSingleResult();
+            return cv;
+        }catch (Exception e){
+            return null;
+        }
+    }
 
     public Cv findByCandidateId(int candidateId){
-             Session currentSession = getCurrentSession();
-             CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
-             CriteriaQuery<Cv> criteriaQuery = criteriaBuilder.createQuery(Cv.class);
-             Root<Cv> cvRoot = criteriaQuery.from(Cv.class);
-             Root<Candidate> candidateRoot = criteriaQuery.from(Candidate.class);
+        Session currentSession = getCurrentSession();
+        CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+        CriteriaQuery<Cv> criteriaQuery = criteriaBuilder.createQuery(Cv.class);
+        Root<Cv> cvRoot = criteriaQuery.from(Cv.class);
+        Predicate findByCandidateIdPredicate = criteriaBuilder.equal(cvRoot.get("candidate").get("id"), candidateId);
+        criteriaQuery.select(cvRoot).where(findByCandidateIdPredicate);
+        criteriaQuery.distinct(true);
+        Query<Cv> query = currentSession.createQuery(criteriaQuery);
+        Cv cv = query.getSingleResult();
 
-             Predicate findByCandidateIdPredicate = criteriaBuilder.equal(cvRoot.get("candidate").get("id"), candidateId);
-             criteriaQuery.select(cvRoot).where(findByCandidateIdPredicate);
-             criteriaQuery.distinct(true);
-
-             Query<Cv> query = currentSession.createQuery(criteriaQuery);
-             Cv cv = query.getSingleResult();
-
-             return cv;
-         }
+        cv.setLanguages(lanDao.findByCvId(cv.getId()));
+        cv.setExperiances(expDao.findByCvId(cv.getId()));
+        cv.setSchools(schDao.findByCvId(cv.getId()));
+        cv.setTechnologies(tecDao.findByCvId(cv.getId()));
+        return cv;
+    }
 }

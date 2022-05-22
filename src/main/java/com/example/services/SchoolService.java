@@ -1,10 +1,10 @@
 package com.example.services;
 
-import com.example.utilities.results.*;
 import com.example.dataAcces.CvDao;
 import com.example.dataAcces.SchoolDao;
 import com.example.entities.concretes.School;
 import com.example.entities.dtos.SchoolForSerDto;
+import com.example.utilities.results.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -37,7 +37,7 @@ public class SchoolService {
         }
 
         School school=new School();
-        school.setCv(this.cvDao.getByCvId(schoolForSerDto.getCvId()));
+        school.setCv_id(this.cvDao.getByCvId(schoolForSerDto.getCvId()).getId());
         school.setName(schoolForSerDto.getName());
         school.setDepartment(schoolForSerDto.getDepartment());
         school.setStartDate(schoolForSerDto.getStartDate());
@@ -48,10 +48,11 @@ public class SchoolService {
     }
 
     public Result deleteSchool(int schoolId) {
-        if(this.schoolDao.getById(schoolId)==null){
+        School school = this.schoolDao.getById(schoolId);
+        if(school==null){
             return new ErrorResult("Böyle bir okul yok");
         }
-        this.schoolDao.deleteById(schoolId);
+        this.schoolDao.deleteById(school);
         return new SuccessResult("Okul silindi");
     }
 
