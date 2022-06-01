@@ -19,9 +19,7 @@ import java.util.List;
 public class SchoolDao {
     @Autowired
     private SessionFactory sessionFactory ;
-
     private Session getCurrentSession(){
-
         return sessionFactory.getCurrentSession();
     }
 
@@ -50,20 +48,19 @@ public class SchoolDao {
     public School getById(int schoolId){
         try {
             Session currentSession = getCurrentSession();
-                    CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
-                    CriteriaQuery<School> criteriaQuery = criteriaBuilder.createQuery(School.class);
-                    Root<School> root = criteriaQuery.from(School.class);
+            CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+            CriteriaQuery<School> criteriaQuery = criteriaBuilder.createQuery(School.class);
+            Root<School> root = criteriaQuery.from(School.class);
 
-                    Predicate schoolIdPredicate = criteriaBuilder.equal(root.get("id"), schoolId);
-                    criteriaQuery.select(root).where(schoolIdPredicate);
+            Predicate schoolIdPredicate = criteriaBuilder.equal(root.get("id"), schoolId);
+            criteriaQuery.select(root).where(schoolIdPredicate);
 
-                    Query<School> query = currentSession.createQuery(criteriaQuery);
-                    School school = query.getSingleResult();
-                    return school;
+            Query<School> query = currentSession.createQuery(criteriaQuery);
+            School school = query.getSingleResult();
+            return school;
         }catch (Exception e){
             return null;
         }
-
     }
 
     public List<School> findByCvId(int cvId){
@@ -71,11 +68,8 @@ public class SchoolDao {
         CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
         CriteriaQuery<School> criteriaQuery = criteriaBuilder.createQuery(School.class);
         Root<School> schoolRoot = criteriaQuery.from(School.class);
-        Root<Cv> cvRoot = criteriaQuery.from(Cv.class);
 
-        schoolRoot.get("cv").alias("cv");
-
-        Predicate findByCvIdPredicate = criteriaBuilder.equal(schoolRoot.get("cv.id"), cvRoot.get("cvId"));
+        Predicate findByCvIdPredicate = criteriaBuilder.equal(schoolRoot.get("cv_id"), cvId);
         criteriaQuery.select(schoolRoot).where(findByCvIdPredicate);
         criteriaQuery.distinct(true);
 
@@ -83,5 +77,4 @@ public class SchoolDao {
         List<School> school = query.getResultList();
         return school;
     }
-
 }

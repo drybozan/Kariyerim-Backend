@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Exception.class)
 @Service
 public class JobAdService {
@@ -81,17 +82,6 @@ public class JobAdService {
         return new SuccessResult("İlan başarılı bir şekilde eklendi");
     }
 
-    public Result setPasssive(int jobAdId) {
-        try {
-            JobAd jobAd=this.jobAdDao.getById(jobAdId);
-           
-            jobAdDao.save(jobAd);
-            return new SuccessResult("İş ilanı pasifleştirildi");
-        }catch (EntityNotFoundException exception){
-            return new ErrorResult("İş ilanı bulunamadı");
-        }
-    }
-
     public DataResult<List<JobAd>> getAll() {
         return new SuccessDataResult<List<JobAd>>((List<JobAd>) this.jobAdDao.getAll(),"Data listelendi");
     }
@@ -112,4 +102,3 @@ public class JobAdService {
         return new DataResult<List<JobAd>>(result, true);
     }
 }
-

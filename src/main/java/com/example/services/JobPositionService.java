@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Exception.class)
 @Service
 public class  JobPositionService {
@@ -22,12 +21,10 @@ public class  JobPositionService {
         this.jobPositionDao = jobPositionDao;
     }
 
-    //@Override
     public DataResult<List<JobPosition>> getAll() {
         return new SuccessDataResult<List<JobPosition>>((List<JobPosition>) this.jobPositionDao.getAll(),"Data listelendi");
     }
 
-   // @Override
     public Result add(JobPosition jobPosition) {
         if(getByName(jobPosition.getName()).getData() != null){
             return new ErrorResult("Bu isimde bir pozisyon zaten kayıtlı");
@@ -39,7 +36,6 @@ public class  JobPositionService {
         }
     }
 
-   // @Override
     public DataResult<JobPosition> getByName(String name) {
         return new SuccessDataResult<JobPosition>(this.jobPositionDao.findByName(name),"Listelendi");
     }

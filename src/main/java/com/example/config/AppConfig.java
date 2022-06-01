@@ -21,7 +21,6 @@ import static org.hibernate.cfg.AvailableSettings.*;
 @EnableTransactionManagement
 @ComponentScan(basePackages = {"com.example"})
 public class AppConfig {
-
 	private Environment env;
 
 	@Autowired

@@ -8,18 +8,34 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class RequestInterceptor extends HandlerInterceptorAdapter {
-
     private static final Logger logger = LoggerFactory.getLogger(RequestInterceptor.class);
+    private Map<String, String> getParameterMap(HttpServletRequest request) {
+        Map<String, String[]> springParameterMap = request.getParameterMap();
+        Map<String, String> pluginParameterMap = new HashMap<>();
+        for (String parameterName : springParameterMap.keySet()) {
+            String[] values = springParameterMap.get(parameterName);
+            if (values != null && values.length > 0) {
+                pluginParameterMap.put(parameterName, values[0]);
+            } else {
+                pluginParameterMap.put(parameterName, null);
+            }
+        }
+        return pluginParameterMap;
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        long startTime = System.currentTimeMillis();
-        logger.info("eeeeeeeeeeeeeeRequest URL::" + request.getRequestURL().toString()
-                + ":: Start Time=" + System.currentTimeMillis());
-        request.setAttribute("startTime", startTime);
+
+        String str = "Request URL::" + request.getRequestURL().toString()
+                + ":: Baslama Zamani=" + System.currentTimeMillis() +
+                "Param: " + request.getParameterMap();
+        logger.info(str);
+        System.out.println(str);
         return true;
     }
 
@@ -27,16 +43,8 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
     public void postHandle(HttpServletRequest request,
                            HttpServletResponse response, Object handler,
                            ModelAndView modelAndView) throws Exception {
-        System.out.println("Request URL::" + request.getRequestURL().toString() + " Sent to Handler :: Current Time=" + System.currentTimeMillis());
+        String str = "Request URL::" + request.getRequestURL().toString() + " Sent to Handler :: Gecerli Zaman: " + System.currentTimeMillis();
+        logger.info(str);
+        System.out.println(str);
     }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        long startTime = (Long) request.getAttribute("startTime");
-        logger.info("Request URL::" + request.getRequestURL().toString()
-                + ":: End Time=" + System.currentTimeMillis());
-        logger.info("Request URL::" + request.getRequestURL().toString()
-                + ":: Time Taken=" + (System.currentTimeMillis() - startTime));
-    }
-
 }

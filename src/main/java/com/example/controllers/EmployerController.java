@@ -19,8 +19,6 @@ public class EmployerController {
 
     private EmployerService employerService;
 
-    private static Logger logger = LoggerFactory.getLogger(EmployerController.class);
-
     @Autowired
     public EmployerController(EmployerService employerService) {
         this.employerService = employerService;
@@ -28,16 +26,13 @@ public class EmployerController {
 
     @GetMapping("/getall")
     public String getAll(){
-        logger.info("Employer Controller Class'ı getAll() metodu çalıştı");
         return Util.ConvertToJsonString(this.employerService.getAll());
     }
 
     @PostMapping("/add")
     public String add(@RequestBody String json, HttpServletRequest request, HttpServletResponse response){
-        logger.info("Employer Controller Class'ı add() metodu çalıştı ");
         EmployerForRegisterDto nesne = new EmployerForRegisterDto();
         JSONObject requestBody = new JSONObject(json);
-        logger.info("Employer Controller Class'ı add() metodu çalıştı xxxxxxxxxxxx" + json);
         nesne.setEmail(requestBody.getString("email"));
         nesne.setPassword(Util.GetSha256Hash(requestBody.getString("password")));
         nesne.setCompanyName(requestBody.getString("companyName"));
@@ -53,8 +48,6 @@ public class EmployerController {
 
     @GetMapping("/getById")
     public String getById(@RequestParam int id){
-        logger.info("Employer Controller Class'ı getById() metodu çalıştı");
         return Util.ConvertToJsonString(this.employerService.getById(id));
     }
-
 }

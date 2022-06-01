@@ -19,18 +19,18 @@ public class JobAd {
     @Column(name = "id")
     private int id;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "employer_id")
     private Employer employer;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "jobposition_id")
     private JobPosition jobPosition;
 
     @Column(name = "description")
     private String description;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "city_id")
     private City city;
 
@@ -49,14 +49,14 @@ public class JobAd {
     @Column(name = "create_date")
     private LocalDate createDate;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "workplace_id")
     private WorkPlace workPlace;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "work_time_id")
     private WorkTime workTime;
 
-   // private boolean confirmed;
+
 }
 

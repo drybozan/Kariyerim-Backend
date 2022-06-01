@@ -13,13 +13,12 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.util.List;
+
 @Repository
 public class CvDao {
     @Autowired
     private SessionFactory sessionFactory ;
-
     private Session getCurrentSession(){
-
         return sessionFactory.getCurrentSession();
     }
 
@@ -52,7 +51,6 @@ public class CvDao {
         criteriaQuery.select(root);
 
         Query<Cv> dbQuery = currentSession.createQuery(criteriaQuery);
-
         List<Cv> resultList = dbQuery.getResultList();
         return  resultList;
     }
@@ -60,17 +58,16 @@ public class CvDao {
     public Cv getByCvId2(int cvId){
         try {
             Session currentSession = getCurrentSession();
-                    CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
-                    CriteriaQuery<Cv> criteriaQuery = criteriaBuilder.createQuery(Cv.class);
-                    Root<Cv> root = criteriaQuery.from(Cv.class);
+            CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+            CriteriaQuery<Cv> criteriaQuery = criteriaBuilder.createQuery(Cv.class);
+            Root<Cv> root = criteriaQuery.from(Cv.class);
 
             Predicate cvIdPredicate = criteriaBuilder.equal(root.get("candidate").get("id"), cvId);
             criteriaQuery.select(root).where(cvIdPredicate);
 
-                    Query<Cv> query = currentSession.createQuery(criteriaQuery);
-                    Cv cv = query.getSingleResult();
-
-                    return cv;
+            Query<Cv> query = currentSession.createQuery(criteriaQuery);
+            Cv cv = query.getSingleResult();
+            return cv;
         }catch (Exception e){
           return null;
         }

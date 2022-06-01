@@ -25,9 +25,7 @@ public class  ExperianceService {
         this.cvDao=cvDao;
     }
 
-
     public Result add(ExperianceForSetDto experianceForSetDto) {
-
         if(this.cvDao.getByCvId(experianceForSetDto.getCvId())==null){
             return new ErrorResult("Böyle bir cv yok");
         }else if(experianceForSetDto.getCompanyName().length()<=2){
@@ -49,7 +47,6 @@ public class  ExperianceService {
         return new SuccessResult("Kaydedildi");
     }
 
-
     public Result delete(int experianceId) {
         Experiance ex = this.experianceDto.getById(experianceId);
         if(ex==null){
@@ -59,10 +56,8 @@ public class  ExperianceService {
         return new SuccessResult("Silindi");
     }
 
-
     public DataResult<List<Experiance>> getByCvId(int id) {
 
         return new SuccessDataResult<List<Experiance>>((List<Experiance>) this.experianceDto.findByCvId(id),"Data listelendi");
     }
 }
-

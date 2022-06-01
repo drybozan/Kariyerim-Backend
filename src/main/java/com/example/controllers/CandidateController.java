@@ -20,24 +20,18 @@ public class CandidateController {
     @Autowired
     private CandidateService candidateService;
 
-    private static Logger logger = LoggerFactory.getLogger(CandidateController.class);
-
-
     public CandidateController(CandidateService candidateService) {
         this.candidateService = candidateService;
     }
 
     @GetMapping(value="/getall")
     public String getAll(){
-        logger.info("CandidateController class'ı getAll() metodu çalıştı");
         return Util.ConvertToJsonString(candidateService.getAll());
     }
 
     @PostMapping(value="/add")
     public String add(@RequestBody String json, HttpServletRequest request, HttpServletResponse response){
         JSONObject requestBody = JSONObject.fromObject(json);
-
-        logger.info(requestBody +  " XXXXXXXXXXXXX ");
         CandidateForRegisterDto nesne = new CandidateForRegisterDto();
         nesne.setFirstName(requestBody.getString("firstName"));
         nesne.setLastName(requestBody.getString("lastName"));
@@ -53,7 +47,4 @@ public class CandidateController {
         }
         return Util.ConvertToJsonString(ResponseEntity.badRequest().body(result));
     }
-
- 
 }
-

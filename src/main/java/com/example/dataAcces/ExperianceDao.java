@@ -17,11 +17,10 @@ import java.util.List;
 
 @Repository
 public class ExperianceDao {
+
     @Autowired
     private SessionFactory sessionFactory ;
-
     private Session getCurrentSession(){
-
         return sessionFactory.getCurrentSession();
     }
 
@@ -33,7 +32,6 @@ public class ExperianceDao {
             e.printStackTrace();
             success = false;
         }
-
         return success;
     }
 
@@ -51,32 +49,26 @@ public class ExperianceDao {
     public Experiance getById(int experianceId){
         try {
             Session currentSession = getCurrentSession();
-                    CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
-                    CriteriaQuery<Experiance> criteriaQuery = criteriaBuilder.createQuery(Experiance.class);
-                    Root<Experiance> root = criteriaQuery.from(Experiance.class);
+            CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+            CriteriaQuery<Experiance> criteriaQuery = criteriaBuilder.createQuery(Experiance.class);
+            Root<Experiance> root = criteriaQuery.from(Experiance.class);
 
-                    Predicate experianceIdPredicate = criteriaBuilder.equal(root.get("id"), experianceId);
-                    criteriaQuery.select(root).where(experianceIdPredicate);
+            Predicate experianceIdPredicate = criteriaBuilder.equal(root.get("id"), experianceId);
+            criteriaQuery.select(root).where(experianceIdPredicate);
 
-                    Query<Experiance> query = currentSession.createQuery(criteriaQuery);
-                    Experiance experiance = query.getSingleResult();
-                    return experiance;
-        }catch (Exception e){
-            return  null;
-        }
-
+            Query<Experiance> query = currentSession.createQuery(criteriaQuery);
+            Experiance experiance = query.getSingleResult();
+            return experiance;
+        }catch (Exception e){return  null;}
     }
 
     public List<Experiance> findByCvId(int cvId){
         Session currentSession = getCurrentSession();
         CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
         CriteriaQuery<Experiance> criteriaQuery = criteriaBuilder.createQuery(Experiance.class);
-        Root<Cv> cvRoot = criteriaQuery.from(Cv.class);
         Root<Experiance> experianceRoot = criteriaQuery.from(Experiance.class);
 
-        experianceRoot.get("cv").alias("cv");
-
-        Predicate findByCvIdPredicate = criteriaBuilder.equal(experianceRoot.get("cv.id"), cvRoot.get("cvId"));
+        Predicate findByCvIdPredicate = criteriaBuilder.equal(experianceRoot.get("cv_id"), cvId);
         criteriaQuery.select(experianceRoot).where(findByCvIdPredicate);
         criteriaQuery.distinct(true);
 
@@ -84,5 +76,4 @@ public class ExperianceDao {
         List<Experiance> experiance = query.getResultList();
         return experiance;
     }
-
 }

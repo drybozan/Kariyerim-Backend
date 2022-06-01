@@ -29,4 +29,5 @@ public class Candidate extends User{
 
     @Column(name = "birthdate")
     private LocalDate dateOfBirth;
+
 }

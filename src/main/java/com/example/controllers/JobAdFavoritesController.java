@@ -15,7 +15,6 @@ import java.util.List;
 @RequestMapping("/jobAdFavorites")
 @CrossOrigin
 public class JobAdFavoritesController {
-    private static Logger logger = LoggerFactory.getLogger(JobAdFavoritesController.class);
 
     private JobAdFavoritesService jobAdFavoritesService;
 
@@ -26,7 +25,6 @@ public class JobAdFavoritesController {
 
     @GetMapping("/getByCandidateId")
     public String getByCandidateId(@RequestParam int candidateId){
-        logger.info("JobAdFavoritesController class'ı getByCandidateId() metodu çalıştı");
         DataResult<List<JobAdFavorites>> result=this.jobAdFavoritesService.getByCandidateId(candidateId);
         if(result.isSuccess()){
             return Util.ConvertToJsonString(ResponseEntity.ok(result));
@@ -36,8 +34,7 @@ public class JobAdFavoritesController {
 
     @PostMapping("/addFavorite")
     public String addFavorite(@RequestParam int candidateId,@RequestParam int jobAdId){
-        logger.info("JobAdFavoritesController class'ı addFavorite() metodu çalıştı");
-        Result result=this.jobAdFavoritesService.addFavorite(candidateId,jobAdId);
+        Result result=this.jobAdFavoritesService.addFavorite(candidateId, jobAdId);
         if(result.isSuccess()){
             return Util.ConvertToJsonString(ResponseEntity.ok(result));
         }
@@ -46,7 +43,6 @@ public class JobAdFavoritesController {
 
     @DeleteMapping("/removeFavorite")
     public String removeFavorite(@RequestParam int favoriteId){
-        logger.info("JobAdFavoritesController class'ı removeFavorite() metodu çalıştı");
         Result result = this.jobAdFavoritesService.removeFavorite(favoriteId);
         if(result.isSuccess()){
             return Util.ConvertToJsonString(ResponseEntity.ok(result));

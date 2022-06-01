@@ -1,6 +1,5 @@
 package com.example.dataAcces;
 
-
 import com.example.entities.concretes.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,13 +12,12 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
+
 @Repository
 public class UserDao {
     @Autowired
     private SessionFactory sessionFactory ;
-
     private Session getCurrentSession(){
-
         return sessionFactory.getCurrentSession();
     }
 
@@ -30,7 +28,6 @@ public class UserDao {
         Root<User> root = criteriaQuery.from(User.class);
 
         criteriaQuery.select(root);
-
         Query<User> dbQuery = currentSession.createQuery(criteriaQuery);
 
         List<User> resultList = dbQuery.getResultList();
@@ -50,5 +47,4 @@ public class UserDao {
         User user = query.getSingleResult();
         return user;
     }
-   
 }

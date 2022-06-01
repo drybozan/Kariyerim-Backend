@@ -8,16 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
-
 @RestController
 @RequestMapping("/workTime")
 @CrossOrigin
 public class WorkTimesController {
     private WorkTimeService workTimeService;
-
-    private static Logger logger = LoggerFactory.getLogger(WorkTimesController.class);
 
     @Autowired
     public WorkTimesController(WorkTimeService workTimeService) {
@@ -25,8 +20,7 @@ public class WorkTimesController {
     }
 
     @GetMapping("/getAll")
-    public DataResult<List<WorkTime>> getAll(){
-        logger.info("WorkPlacesController class'ı getAll() metodu çalıştı");
-        return this.workTimeService.getAll();
+    public String getAll(){
+        return Util.ConvertToJsonString(workTimeService.getAll());
     }
 }

@@ -18,11 +18,10 @@ import java.util.List;
 public class JobAdFavoritesDao{
     @Autowired
     private SessionFactory sessionFactory ;
-
     private Session getCurrentSession(){
-
         return sessionFactory.getCurrentSession();
     }
+
     public boolean save(JobAdFavorites jobAdFavorites) {
         boolean success = true;
         try {
@@ -51,11 +50,8 @@ public class JobAdFavoritesDao{
         CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
         CriteriaQuery<JobAdFavorites> criteriaQuery = criteriaBuilder.createQuery(JobAdFavorites.class);
         Root<JobAdFavorites> jobAdFavoritesRoot = criteriaQuery.from(JobAdFavorites.class);
-        Root<Candidate> candidateRoot = criteriaQuery.from(Candidate.class);
 
-        jobAdFavoritesRoot.get("candidate").alias("candidate");
-
-        Predicate findByCandidateIdPredicate = criteriaBuilder.equal(jobAdFavoritesRoot.get("candidate.id"), candidateRoot.get("candidateId"));
+        Predicate findByCandidateIdPredicate = criteriaBuilder.equal(jobAdFavoritesRoot.get("candidate").get("id"),candidateId);
         criteriaQuery.select(jobAdFavoritesRoot).where(findByCandidateIdPredicate);
         criteriaQuery.distinct(true);
 
@@ -67,20 +63,19 @@ public class JobAdFavoritesDao{
     public JobAdFavorites getById(int jobAdFavoritesId){
         try {
             Session currentSession = getCurrentSession();
-                    CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
-                    CriteriaQuery<JobAdFavorites> criteriaQuery = criteriaBuilder.createQuery(JobAdFavorites.class);
-                    Root<JobAdFavorites> root = criteriaQuery.from(JobAdFavorites.class);
+            CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+            CriteriaQuery<JobAdFavorites> criteriaQuery = criteriaBuilder.createQuery(JobAdFavorites.class);
+            Root<JobAdFavorites> root = criteriaQuery.from(JobAdFavorites.class);
 
-                    Predicate cvIdPredicate = criteriaBuilder.equal(root.get("id"), jobAdFavoritesId);
-                    criteriaQuery.select(root).where(cvIdPredicate);
+            Predicate cvIdPredicate = criteriaBuilder.equal(root.get("id"), jobAdFavoritesId);
+            criteriaQuery.select(root).where(cvIdPredicate);
 
-                    Query<JobAdFavorites> query = currentSession.createQuery(criteriaQuery);
-                    JobAdFavorites jobAdFavorites = query.getSingleResult();
-                    return jobAdFavorites;
+            Query<JobAdFavorites> query = currentSession.createQuery(criteriaQuery);
+            JobAdFavorites jobAdFavorites = query.getSingleResult();
+            return jobAdFavorites;
         }catch (Exception e){
             return null;
         }
-
     }
 
     public boolean existsByCandidate_IdAndJobAd_Id(int candidateId, int jobAdId){
@@ -101,7 +96,4 @@ public class JobAdFavoritesDao{
         }
         catch (Exception ex){return false;}
     }
-
-    //List<JobAdFavorites> findByCandidateId(int id);
-    //boolean existsByCandidate_IdAndJobAd_Id(int candidateId, int JobAdId);
 }

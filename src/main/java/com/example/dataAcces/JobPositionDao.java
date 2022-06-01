@@ -1,6 +1,5 @@
 package com.example.dataAcces;
 
-
 import com.example.entities.concretes.JobPosition;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -14,13 +13,12 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.util.List;
+
 @Repository
 public class JobPositionDao  {
     @Autowired
     private SessionFactory sessionFactory ;
-
     private Session getCurrentSession(){
-
         return sessionFactory.getCurrentSession();
     }
 
@@ -35,7 +33,6 @@ public class JobPositionDao  {
         return success;
     }
 
-
     public   List<JobPosition> getAll(){
         Session currentSession = getCurrentSession();
         CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
@@ -45,7 +42,6 @@ public class JobPositionDao  {
         criteriaQuery.select(root);
 
         Query<JobPosition> dbQuery = currentSession.createQuery(criteriaQuery);
-
         List<JobPosition> resultList = dbQuery.getResultList();
         return  resultList;
     }
@@ -56,8 +52,7 @@ public class JobPositionDao  {
         CriteriaQuery<JobPosition> criteriaQuery = criteriaBuilder.createQuery(JobPosition.class);
         Root<JobPosition> root = criteriaQuery.from(JobPosition.class);
 
-        Predicate namePredicate = criteriaBuilder.equal(root.get("name"), "name");
-
+        Predicate namePredicate = criteriaBuilder.equal(root.get("name"), name);
         criteriaQuery.select(root).where(namePredicate);
 
         Query<JobPosition> query = currentSession.createQuery(criteriaQuery);
@@ -81,6 +76,5 @@ public class JobPositionDao  {
         }catch (Exception e){
             return null;
         }
-
     }
 }

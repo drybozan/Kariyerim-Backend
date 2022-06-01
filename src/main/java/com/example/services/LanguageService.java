@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Exception.class)
 @Service
 public class  LanguageService {
@@ -26,9 +25,7 @@ public class  LanguageService {
         this.cvDao=cvDao;
     }
 
-    //@Override
     public Result addLanguage(LanguageForSetDto languageForSetDto) {
-
         if(this.cvDao.getByCvId(languageForSetDto.getCvId())==null){
             return new ErrorResult("Böyle bir cv yok");
         }else if(languageForSetDto.getName().length()<=2){
@@ -36,7 +33,6 @@ public class  LanguageService {
         }else if(Integer.parseInt(languageForSetDto.getLevel()) <=0 || Integer.parseInt(languageForSetDto.getLevel()) >=6){
             return new ErrorResult("Dil seviyesi 1-5 arası bir değer olmalıdır");
         }
-
         Language language=new Language();
         //language.setCv(this.cvDao.getByCvId(languageForSetDto.getCvId()));
         language.setName(languageForSetDto.getName());
@@ -44,10 +40,8 @@ public class  LanguageService {
         language.setCv_id(languageForSetDto.getCvId());
         this.languageDao.save(language);
         return new SuccessResult("Dil kaydedildi");
-
     }
 
-    //@Override
     public Result deleteLanguage(int languageId) {
         Language lan = this.languageDao.getById(languageId);
         if(lan == null){
@@ -57,7 +51,6 @@ public class  LanguageService {
         return new SuccessResult("Silindi");
     }
 
-    //@Override
     public DataResult<List<Language>> getByCvId(int cvId) {
         if(this.cvDao.getByCvId(cvId)==null){
             return new ErrorDataResult<List<Language>>("Böyle bir cv yok");
@@ -65,4 +58,3 @@ public class  LanguageService {
         return new SuccessDataResult<List<Language>>((List<Language>) this.languageDao.findByCvId(cvId),"Listelendi");
     }
 }
-

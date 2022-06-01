@@ -4,9 +4,9 @@ import com.example.Util;
 import com.example.entities.dtos.LanguageForSetDto;
 import com.example.services.LanguageService;
 import com.example.utilities.results.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 @CrossOrigin
 public class LanguagesController {
 
-    private static Logger logger = LoggerFactory.getLogger(LanguagesController.class);
     private LanguageService languageService;
 
     @Autowired
@@ -26,20 +25,27 @@ public class LanguagesController {
     }
 
     @PostMapping("/addLanguage")
-    public Result addLanguage(@RequestBody LanguageForSetDto languageForSetDto){
-        logger.info("LanguagesController class'ı addLanguage() metodu çalıştı");
-        return this.languageService.addLanguage(languageForSetDto);
+    public String addLanguage(@RequestBody String json, HttpServletRequest request,
+                              HttpServletResponse response){
+        JSONObject requestBody = new JSONObject(json);
+        LanguageForSetDto nesne = new LanguageForSetDto();
+        nesne.setName(requestBody.getString("name"));
+        nesne.setLevel(Integer.toString(requestBody.getInt("level")));
+        nesne.setCvId(requestBody.getInt("cvId"));
+        Result result=this.languageService.addLanguage(nesne);
+        if(result.isSuccess()){
+            return Util.ConvertToJsonString(ResponseEntity.ok(result));
+        }
+        return Util.ConvertToJsonString(ResponseEntity.badRequest().body(result));
     }
 
     @DeleteMapping("/deleteLanguage")
-    public Result deleteLanguage(@RequestParam int languageId){
-        logger.info("LanguagesController class'ı deleteLanguage() metodu çalıştı");
-        return this.languageService.deleteLanguage(languageId);
+    public String deleteLanguage(@RequestParam int languageId){
+        return Util.ConvertToJsonString(languageService.deleteLanguage(languageId));
     }
 
     @GetMapping("/getByCvId")
-    public DataResult<List<Language>> getByCvId(@RequestParam int cvId){
-        logger.info("LanguagesController class'ı getByCvId() metodu çalıştı");
-        return this.languageService.getByCvId(cvId);
+    public String getByCvId(@RequestParam int cvId){
+        return Util.ConvertToJsonString(languageService.getByCvId(cvId));
     }
 }

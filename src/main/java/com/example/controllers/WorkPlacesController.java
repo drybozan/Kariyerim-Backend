@@ -18,16 +18,13 @@ public class WorkPlacesController {
 
     private WorkPlaceService workPlaceService;
 
-    private static Logger logger = LoggerFactory.getLogger(WorkPlacesController.class);
-
     @Autowired
     public WorkPlacesController(WorkPlaceService workPlaceService) {
         this.workPlaceService = workPlaceService;
     }
 
     @GetMapping("/getAll")
-    public DataResult<List<WorkPlace>> getAll(){
-        logger.info("WorkPlacesController class'ı getAll() metodu çalıştı");
-        return this.workPlaceService.getAll();
+    public String getAll(){
+        return Util.ConvertToJsonString(workPlaceService.getAll());
     }
 }

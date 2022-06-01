@@ -20,7 +20,6 @@ public class TechnologyDao {
     private SessionFactory sessionFactory ;
 
     private Session getCurrentSession(){
-
         return sessionFactory.getCurrentSession();
     }
 
@@ -34,7 +33,8 @@ public class TechnologyDao {
         }
         return success;
     }
-    public boolean deleteById(int technologyId) {
+
+    public boolean deleteById(Technology technology) {
         boolean success = true;
         try {
             getCurrentSession().remove(technology);
@@ -61,7 +61,6 @@ public class TechnologyDao {
         }catch (Exception e){
             return null;
         }
-
     }
 
     public List<Technology> findByCvId(int cvId){
@@ -69,11 +68,8 @@ public class TechnologyDao {
         CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
         CriteriaQuery<Technology> criteriaQuery = criteriaBuilder.createQuery(Technology.class);
         Root<Technology> technologyRoot = criteriaQuery.from(Technology.class);
-        Root<Cv> cvRoot = criteriaQuery.from(Cv.class);
 
-        technologyRoot.get("cv").alias("cv");
-
-        Predicate findByCvIdPredicate = criteriaBuilder.equal(technologyRoot.get("cv.id"), cvRoot.get("cvId"));
+        Predicate findByCvIdPredicate = criteriaBuilder.equal(technologyRoot.get("cv_id"), cvId);
         criteriaQuery.select(technologyRoot).where(findByCvIdPredicate);
         criteriaQuery.distinct(true);
 

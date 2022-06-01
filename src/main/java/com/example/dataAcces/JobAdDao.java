@@ -1,6 +1,5 @@
 package com.example.dataAcces;
 
-
 import com.example.entities.concretes.JobAd;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -15,13 +14,12 @@ import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 @Repository
 public class JobAdDao {
     @Autowired
     private SessionFactory sessionFactory ;
-
     private Session getCurrentSession(){
-
         return sessionFactory.getCurrentSession();
     }
 
@@ -45,7 +43,6 @@ public class JobAdDao {
         criteriaQuery.select(root);
 
         Query<JobAd> dbQuery = currentSession.createQuery(criteriaQuery);
-
         List<JobAd> resultList = dbQuery.getResultList();
         return resultList;
     }
@@ -68,19 +65,17 @@ public class JobAdDao {
     public JobAd getById(int jobAdId){
         try {
            Session currentSession = getCurrentSession();
-                   CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
-                   CriteriaQuery<JobAd> criteriaQuery = criteriaBuilder.createQuery(JobAd.class);
-                   Root<JobAd> root = criteriaQuery.from(JobAd.class);
+           CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+           CriteriaQuery<JobAd> criteriaQuery = criteriaBuilder.createQuery(JobAd.class);
+           Root<JobAd> root = criteriaQuery.from(JobAd.class);
 
-                   Predicate jobAdIdPredicate = criteriaBuilder.equal(root.get("id"), jobAdId);
-                   criteriaQuery.select(root).where(jobAdIdPredicate);
+           Predicate jobAdIdPredicate = criteriaBuilder.equal(root.get("id"), jobAdId);
+           criteriaQuery.select(root).where(jobAdIdPredicate);
 
-                   Query<JobAd> query = currentSession.createQuery(criteriaQuery);
-                   JobAd jobAd = query.getSingleResult();
-                   return jobAd;
-        }catch (Exception e){
-            return null;
-        }
+           Query<JobAd> query = currentSession.createQuery(criteriaQuery);
+           JobAd jobAd = query.getSingleResult();
+           return jobAd;
+        }catch (Exception e){return null;}
     }
 
     public List<JobAd> getByFilter(int pageNo, int pageSize, Integer[]  cityId, Integer[]  jobPositionId, Integer[]  workPlaceId, Integer[]  workTimeId){

@@ -13,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @PrimaryKeyJoinColumn(name = "id")
-
 public class Employer extends User{
 
     @Column(name = "companyname")
@@ -25,6 +24,6 @@ public class Employer extends User{
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "employer")
+    @Transient
     private List<JobAd> jobAds;
 }

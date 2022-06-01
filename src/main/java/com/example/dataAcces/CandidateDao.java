@@ -7,13 +7,9 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.io.Serializable;
 import java.util.List;
-
 
 @Repository
 public class CandidateDao  {
@@ -21,9 +17,9 @@ public class CandidateDao  {
     private SessionFactory sessionFactory ;
 
     private Session getCurrentSession(){
-
         return sessionFactory.getCurrentSession();
     }
+
     public Candidate findByNationalNumber(String nationalNumber){
         Session currentSession = getCurrentSession();
         CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
@@ -55,29 +51,26 @@ public class CandidateDao  {
             e.printStackTrace();
             success = false;
         }
-
         return success;
     }
 
     public Candidate getById(int candidateId){
        try{
            Session currentSession = getCurrentSession();
+           CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+           CriteriaQuery<Candidate> criteriaQuery = criteriaBuilder.createQuery(Candidate.class);
+           Root<Candidate> root = criteriaQuery.from(Candidate.class);
 
-        CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
-        CriteriaQuery<Candidate> criteriaQuery = criteriaBuilder.createQuery(Candidate.class);
-        Root<Candidate> root = criteriaQuery.from(Candidate.class);
+           Predicate candidateIdPredicate = criteriaBuilder.equal(root.get("id"), candidateId);
+           criteriaQuery.select(root).where(candidateIdPredicate);
 
-        Predicate candidateIdPredicate = criteriaBuilder.equal(root.get("id"), "candidateId");
-        criteriaQuery.select(root).where(candidateIdPredicate);
-
-        Query<Candidate> query = currentSession.createQuery(criteriaQuery);
-        Candidate candidate = query.getSingleResult();
+           Query<Candidate> query = currentSession.createQuery(criteriaQuery);
+           Candidate candidate = query.getSingleResult();
            return candidate;
        }
        catch (Exception e ){
            return null;
        }
-
     }
-
 }
+

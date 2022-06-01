@@ -21,7 +21,6 @@ public class  WorkPlaceService {
         this.workPlaceDao = workPlaceDao;
     }
 
-    //@Override
     public DataResult<List<WorkPlace>> getAll() {
         return new SuccessDataResult<List<WorkPlace>>((List<WorkPlace>) this.workPlaceDao.getAll(),"Data listelendi");
     }

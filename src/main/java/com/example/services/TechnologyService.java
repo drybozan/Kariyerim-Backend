@@ -12,9 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
-
-
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Exception.class)
 @Service
 public class  TechnologyService {

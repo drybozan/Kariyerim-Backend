@@ -21,7 +21,6 @@ public class WorkTimeService {
         this.workTimeDao = workTimeDao;
     }
 
-    //@Override
     public DataResult<List<WorkTime>> getAll() {
         return new SuccessDataResult<List<WorkTime>>((List<WorkTime>) this.workTimeDao.getAll(),"Data listelendi");
     }

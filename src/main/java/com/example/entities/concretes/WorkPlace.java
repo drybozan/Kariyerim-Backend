@@ -12,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "workplace")
-
 public class WorkPlace {
 
     @Id

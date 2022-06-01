@@ -19,9 +19,7 @@ import java.util.List;
 public class LanguageDao {
     @Autowired
     private SessionFactory sessionFactory ;
-
     private Session getCurrentSession(){
-
         return sessionFactory.getCurrentSession();
     }
 
@@ -49,20 +47,19 @@ public class LanguageDao {
     public Language getById(int languageId){
         try {
             Session currentSession = getCurrentSession();
-                    CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
-                    CriteriaQuery<Language> criteriaQuery = criteriaBuilder.createQuery(Language.class);
-                    Root<Language> root = criteriaQuery.from(Language.class);
+            CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+            CriteriaQuery<Language> criteriaQuery = criteriaBuilder.createQuery(Language.class);
+            Root<Language> root = criteriaQuery.from(Language.class);
 
-                    Predicate languageIdPredicate = criteriaBuilder.equal(root.get("id"), languageId);
-                    criteriaQuery.select(root).where(languageIdPredicate);
+            Predicate languageIdPredicate = criteriaBuilder.equal(root.get("id"), languageId);
+            criteriaQuery.select(root).where(languageIdPredicate);
 
-                    Query<Language> query = currentSession.createQuery(criteriaQuery);
-                    Language language = query.getSingleResult();
-                    return language;
+            Query<Language> query = currentSession.createQuery(criteriaQuery);
+            Language language = query.getSingleResult();
+            return language;
         }catch (Exception e){
             return null;
         }
-
     }
 
     public List<Language> findByCvId(int cvId){
@@ -70,11 +67,8 @@ public class LanguageDao {
         CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
         CriteriaQuery<Language> criteriaQuery = criteriaBuilder.createQuery(Language.class);
         Root<Language> languageRoot = criteriaQuery.from(Language.class);
-        Root<Cv> cvRoot = criteriaQuery.from(Cv.class);
 
-        languageRoot.get("cv").alias("cv");
-
-        Predicate findByCvIdPredicate = criteriaBuilder.equal(languageRoot.get("cv.id"), cvRoot.get("cvId"));
+        Predicate findByCvIdPredicate = criteriaBuilder.equal(languageRoot.get("cv_id"), cvId);
         criteriaQuery.select(languageRoot).where(findByCvIdPredicate);
         criteriaQuery.distinct(true);
 
@@ -82,5 +76,4 @@ public class LanguageDao {
         List<Language> language = query.getResultList();
         return language;
     }
-
 }

@@ -13,8 +13,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Spring MVC 5 Örneği</title>
 </head>
-<body>
-<h1>Beklenmedik bir hata oluştu.</h1>
-<h2>Hata bize ulaştı, en kısa zamanda çözümlenecektir. Ama çok uykumuz var, bu gece sabahladık. Bir ara bakarız..</h2>
+<body >
+<div style="text-align:center"><img src="https://cdn2.iconfinder.com/data/icons/businessman-emotions/261/businessman-unhappy-angry-009-512.png"></div>
+<h1 style="text-align:center">Beklenmedik bir hata oluştu.</h1>
+<h2 style="text-align:center">Hata bize ulaştı, en kısa zamanda çözümlenecektir. Ama çok uykumuz var, bu gece sabahladık. Bir ara bakarız..</h2>
 </body>
 </html>

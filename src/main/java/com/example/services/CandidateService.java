@@ -1,6 +1,5 @@
 package com.example.services;
 
-
 import com.example.dataAcces.CandidateDao;
 import com.example.dataAcces.CvDao;
 import com.example.entities.concretes.Candidate;
@@ -11,11 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.regex.Pattern;
-
-
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED,readOnly = false,rollbackFor = Exception.class)
@@ -32,18 +28,14 @@ public class CandidateService {
         
     }
 
-    //@Override
     public DataResult<List<Candidate>> getAll() {
         return new SuccessDataResult<List<Candidate>>((List<Candidate>) this.candidateDao.getAll(),"Data listelendi");
     }
 
-    //@Override
     public DataResult<Candidate> getByNationalNumber(String nationalNumber) {
         return new SuccessDataResult<Candidate>(this.candidateDao.findByNationalNumber(nationalNumber),"Listelendi");
     }
 
-
-   // @Override
     public Result add(CandidateForRegisterDto candidateDto) {
         if(!candidateDto.getPassword().equals(candidateDto.getRePassword())){//şifre tekrarı için
             return new ErrorResult("Şifreler eşleşmiyor");
@@ -74,10 +66,7 @@ public class CandidateService {
             cvd.save(cv);
             return new SuccessResult("Kullanıcı kaydedildi");
         }
-
-
     }
-
 
     private final String EMAIL_PATTERN = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+.(com|org|net|edu|gov|mil|biz|info|mobi)(.[A-Z]{2})?$";
 

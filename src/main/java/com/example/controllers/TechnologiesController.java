@@ -12,14 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
 @RestController
 @RequestMapping("/api/technology")
 @CrossOrigin
 public class TechnologiesController {
-
-    private static Logger logger = LoggerFactory.getLogger(TechnologiesController.class);
     private TechnologyService technologyService;
 
     @Autowired
@@ -28,20 +24,29 @@ public class TechnologiesController {
     }
 
     @PostMapping("/addTechnology")
-    public Result addTechnology(@RequestBody TechnologyForSerDto technologyForSerDto){
-        logger.info("TechnologiesController class'ı addTechnology() metodu çalıştı");
-        return this.technologyService.addTechnology(technologyForSerDto);
+    public  String addTechnology(@RequestBody String json, HttpServletRequest request,
+                                 HttpServletResponse response){
+
+        JSONObject requestBody = new JSONObject(json);
+        TechnologyForSerDto nesne = new TechnologyForSerDto ();
+
+        nesne.setName(requestBody.getString("name"));
+        nesne.setCvId(requestBody.getInt("cvId"));
+
+        Result result=this.technologyService.addTechnology(nesne);
+        if(result.isSuccess()){
+            return Util.ConvertToJsonString(ResponseEntity.ok(result));
+        }
+        return Util.ConvertToJsonString(ResponseEntity.badRequest().body(result));
     }
 
     @DeleteMapping("/deleteTechnology")
-    public Result deleteTechnology(@RequestParam int technologyId){
-        logger.info("TechnologiesController class'ı deleteTechnology() metodu çalıştı");
-        return this.technologyService.deleteTechnology(technologyId);
+    public  String deleteTechnology(@RequestParam int technologyId){
+        return Util.ConvertToJsonString(technologyService.deleteTechnology(technologyId));
     }
 
     @GetMapping("/getByCvId")
-    public DataResult<List<Technology>> getByCvId(@RequestParam int cvId){
-        logger.info("TechnologiesController class'ı getByCvId() metodu çalıştı");
-        return this.technologyService.getByCvId(cvId);
+    public String getByCvId( int cvId){
+        return Util.ConvertToJsonString(technologyService.getByCvId(cvId));
     }
 }

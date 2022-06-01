@@ -27,12 +27,10 @@ public class JobAdFavoritesService {
         this.jobAdDao=jobAdDao;
     }
 
-   // @Override
     public DataResult<List<JobAdFavorites>> getByCandidateId(int candidateId) {
         return new SuccessDataResult<List<JobAdFavorites>>((List<JobAdFavorites>) this.jobAdFavoritesDao.findByCandidateId(candidateId),"Data listelendi");
     }
 
-    //@Override
     public Result addFavorite(int candidateId, int jobAdId) {
         if(this.jobAdDao.getById(jobAdId)==null){
             return new ErrorResult("Böyle bir ilan yok");
@@ -47,7 +45,6 @@ public class JobAdFavoritesService {
         return new SuccessResult("İlan favorilere eklendi");
     }
 
-    //@Override
     public Result removeFavorite(int favoriteId) {
         if(this.jobAdFavoritesDao.getById(favoriteId)==null){
             return new ErrorResult("Böyle bir favori ilan yok");
@@ -56,4 +53,3 @@ public class JobAdFavoritesService {
         return new SuccessResult("İlan favorilerden kandırıldı");
     }
 }
-

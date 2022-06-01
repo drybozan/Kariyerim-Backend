@@ -7,8 +7,8 @@ import com.example.services.JobAdService;
 import com.example.utilities.results.ErrorDataResult;
 import com.example.utilities.results.Result;
 import com.example.utilities.results.SuccessDataResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 public class JobAdController {
 
     private JobAdService jobAdService;
-
-    private static Logger logger = LoggerFactory.getLogger(JobAdController.class);
 
     @Autowired
     public JobAdController(JobAdService jobAdService) {
@@ -43,21 +41,7 @@ public class JobAdController {
             return Util.ConvertToJsonString(Util.ConvertToJsonString(
                     new ErrorDataResult<JobAd>("Böyle bir ilan yok")));
         }
-        jobAd.setId(jobAdForSet.getId());
-        jobAd.setEmployer(jobAdForSet.getEmployer());
-        jobAd.setJobPosition(jobAdForSet.getJobPosition());
-        jobAd.setDescription(jobAdForSet.getDescription());
-        jobAd.setCity(jobAdForSet.getCity());
-        jobAd.setMinSalary(jobAdForSet.getMinSalary());
-        jobAd.setMaxSalary(jobAdForSet.getMaxSalary());
-        jobAd.setOpenPositions(jobAdForSet.getOpenPositions());
-        jobAd.setLastDate(jobAdForSet.getLastDate());
-        jobAd.setCreateDate(jobAdForSet.getCreateDate());
-        jobAd.setWorkPlace(jobAdForSet.getWorkPlace());
-        jobAd.setWorkTime(jobAdForSet.getWorkTime());
-
-        return Util.ConvertToJsonString(new SuccessDataResult<JobAd>(jobAd,"Data listelendi"));
-    	
+        return Util.ConvertToJsonString(new SuccessDataResult<JobAd>(jobAdForSet, "Data listelendi"));
     }
 
     @PostMapping("/create")

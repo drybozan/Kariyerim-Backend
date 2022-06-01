@@ -11,13 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.regex.Pattern;
 
-
-
-
 @Service
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Exception.class)
 public class EmployerService  {
-
 
     private EmployerDao employerDao;
     private UserService userService;
@@ -25,20 +21,16 @@ public class EmployerService  {
     public EmployerService(EmployerDao employerDao,UserService userService) {
         this.employerDao = employerDao;
         this.userService=userService;
-       
     }
 
-    //@Override
     public DataResult<List<Employer>> getAll() {
         return new SuccessDataResult<List<Employer>>((List<Employer>) this.employerDao.getAll(),"Data listelendi");
     }
 
-    //@Override
     public DataResult<Employer> getByEmail(String email) {
         return new SuccessDataResult<Employer>(this.employerDao.findByEmail(email),"Listelendi");
     }
 
-    //@Override
     public Result add(EmployerForRegisterDto employerDto) {
         if(!employerDto.getPassword().equals(employerDto.getRePassword())){
             return new ErrorResult("Şifreler eşleşmiyor");
@@ -49,8 +41,6 @@ public class EmployerService  {
         employer.setCompanyName(employerDto.getCompanyName());
         employer.setWebSite(employerDto.getWebSite());
         employer.setPhoneNumber(employerDto.getPhoneNumber());
-        
-
 
        if(!isEmailValid(employer.getEmail())){
            return new ErrorResult("Geçerli bir email giriniz");
@@ -65,10 +55,8 @@ public class EmployerService  {
        }
        this.employerDao.save(employer);
        	return new SuccessResult(" Kaydedildiniz");
-
     }
 
-    //@Override
     public DataResult<Employer> getById(int id) {
         if(this.employerDao.getById(id)==null){
             return new ErrorDataResult<Employer>("Böyle bir işveren yok");
@@ -82,7 +70,4 @@ public class EmployerService  {
         Pattern pattern = Pattern.compile(EMAIL_PATTERN, Pattern.CASE_INSENSITIVE);
         return pattern.matcher(emailInput).find();
     }
-
-
 }
-

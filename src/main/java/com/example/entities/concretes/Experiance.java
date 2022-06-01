@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 
 public class Experiance {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

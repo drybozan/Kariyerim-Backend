@@ -13,7 +13,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class School {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -31,7 +30,6 @@ public class School {
     @Column(name = "end_date")
     private LocalDate endDate;
 
-    @ManyToOne()
-    @JoinColumn(name = "cv_id")
-    private Cv cv;
+    @Column(name = "cv_id")
+    private int cv_id;
 }

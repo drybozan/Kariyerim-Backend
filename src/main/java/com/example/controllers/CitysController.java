@@ -13,13 +13,9 @@ public class CitysController {
 
     private CityService cityService;
 
-    private static Logger logger = LoggerFactory.getLogger(CitysController.class);
-
-
     @GetMapping( value ="/getall")
     @ResponseBody
     public String getAll(){
-        logger.info("Citys Controller Class'ı getAll() metodu çalıştı");
         return Util.ConvertToJsonString(cityService.getAll());
     }
 }

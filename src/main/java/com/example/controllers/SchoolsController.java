@@ -12,14 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
 @RestController
 @RequestMapping("/api/school")
 @CrossOrigin
 public class SchoolsController {
 
-    private static Logger logger = LoggerFactory.getLogger(SchoolsController.class);
     private SchoolService schoolService;
 
     @Autowired
@@ -28,20 +25,29 @@ public class SchoolsController {
     }
 
     @PostMapping("/addSchool")
-    public Result addSchool(@RequestBody SchoolForSerDto schoolForSerDto){
-        logger.info("SchoolsController class'ı addSchool() metodu çalıştı");
-        return this.schoolService.addSchool(schoolForSerDto);
+    public String addSchool(@RequestBody String json, HttpServletRequest request, HttpServletResponse response){
+        JSONObject requestBody = new JSONObject(json);
+        SchoolForSerDto nesne = new SchoolForSerDto();
+        nesne.setName(requestBody.getString("name"));
+        nesne.setDepartment(requestBody.getString("department"));
+        nesne.setEndDate(Util.ConvertToDate(requestBody.getString("endDate")));
+        nesne.setStartDate(Util.ConvertToDate(requestBody.getString("startDate")));
+        nesne.setCvId(requestBody.getInt("cvId"));
+        Result result=this.schoolService.addSchool(nesne);
+        if(result.isSuccess()){
+            return Util.ConvertToJsonString(ResponseEntity.ok(result));
+        }
+        return Util.ConvertToJsonString(ResponseEntity.badRequest().body(result));
     }
 
     @DeleteMapping("/deleteSchool")
-    public Result deleteSchool(@RequestParam int schoolId){
-        logger.info("SchoolsController class'ı deleteSchool() metodu çalıştı");
-        return this.schoolService.deleteSchool(schoolId);
+    public String deleteSchool(@RequestParam int schoolId){
+        return Util.ConvertToJsonString(schoolService.deleteSchool(schoolId));
     }
 
     @GetMapping("/getByCvId")
-    public DataResult<List<School>> getByCvId(@RequestParam int cvId){
-        logger.info("SchoolsController class'ı getByCvId() metodu çalıştı");
-        return this.schoolService.getByCvId(cvId);
+    public String getByCvId(@RequestParam int cvId){
+        return Util.ConvertToJsonString(
+                schoolService.getByCvId(cvId));
     }
 }
